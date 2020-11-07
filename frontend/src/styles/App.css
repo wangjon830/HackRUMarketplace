@@ -5,6 +5,8 @@ html {
 
 .App {
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
@@ -14,6 +16,12 @@ p {
 
 body {
   margin: 0;
+}
+
+main {
+  flex: 1 1;
+  display: flex;
+  padding-bottom: 2rem;
 }
 
 header {
@@ -91,10 +99,6 @@ header a {
 
 .sidebar li {
   list-style: none;
-}
-
-.content {
-  padding-bottom: 2rem;
 }
 
 footer {
