@@ -11,7 +11,8 @@ app = Flask(__name__)
 CORS(app)
 
 #Connects to Mongo Database
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+connection_url = 'mongodb+srv://ruteam:ruscrew@cluster0.bvss2.mongodb.net/RUConnect?retryWrites=true&w=majority'
+client = pymongo.MongoClient(connection_url)
 
 #Search items in database
 @app.route('/search', methods=['GET'])
