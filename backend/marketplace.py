@@ -3,6 +3,7 @@
 #prices, user, item name, image array
 import pymongo
 import json
+from bson import ObjectId
 from pymongo import MongoClient
 from flask import Flask, request
 from flask_cors import CORS
@@ -31,11 +32,8 @@ def delete_item():
     db = client['marketplace']
     items = db['items']
     del_item = request.get_json()
-    #print(del_item[1])
-    my_query = {"_id": del_item['_id']}
-    objectID = {my_query[0]: "ObjectId(" + my_query[1] + ")"}
-    print(objectID)
-    item = items.find(objectID)
+    my_query = {"_id": ObjectId(del_item['_id'])}
+    item = items.find(my_query)
     for x in item:
         items.delete_one(x)
     return "success"
