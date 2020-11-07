@@ -10,7 +10,7 @@ import './styles/product.css';
 
 import Navbar from './components/Navbar';
 import HomeScreen from './screens/HomeScreen';
-import LoginScreen from './screens/LoginScreen'
+import LoginScreen from './screens/LoginScreen';
 import ProductScreen from './screens/ProductScreen';
 
 class App extends React.Component {
@@ -29,7 +29,7 @@ class App extends React.Component {
             if (result && result.success){
                 UserStore.loading = false;
                 UserStore.isLoggedIn = true;
-                UserStore.username = result.username;
+                UserStore.email = result.email;
             }
             else{
                 UserStore.loading = false;
@@ -56,7 +56,7 @@ class App extends React.Component {
 
             if (result && result.success){
                 UserStore.isLoggedIn = false;
-                UserStore.username = '';
+                UserStore.email = '';
             }
         }
         catch(e){
