@@ -2,6 +2,7 @@
 #delete
 #prices, user, item name, image array
 import pymongo
+import json
 from pymongo import MongoClient
 from flask import Flask, request
 from flask_cors import CORS
@@ -11,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 #Connects to Mongo Database
-connection_url = 'mongodb+srv://ruteam:ruscrew@cluster0.bvss2.mongodb.net/RUConnect?retryWrites=true&w=majority'
+connection_url = 'mongodb+srv://ruteam:ruscrew@cluster0.bvss2.mongodb.net/marketplace?retryWrites=true&w=majority'
 client = pymongo.MongoClient(connection_url)
 
 #Search items in database
@@ -20,6 +21,8 @@ def search():
     db = client['marketplace']
     items = db['items']
     search_info = request.get_json()
+    my_query = {"tag": search_info['tag']}
+    searched_items = items.find(my_query) 
     return items
 
 #Deletes Item from items database
@@ -28,8 +31,11 @@ def delete_item():
     db = client['marketplace']
     items = db['items']
     del_item = request.get_json()
-    my_query = {"name": del_item['name']}
-    item = items.find(my_query)
+    #print(del_item[1])
+    my_query = {"_id": del_item['_id']}
+    objectID = {my_query[0]: "ObjectId(" + my_query[1] + ")"}
+    print(objectID)
+    item = items.find(objectID)
     for x in item:
         items.delete_one(x)
     return "success"
@@ -51,9 +57,9 @@ def add_user():
     new_user = request.get_json()
     for document in users.find({}, projection={"_id": False}):
         if document["netid"] == new_user['netid']:
-            return "exists"
+            return json.dumps({"msg": "exists"})
     users.insert_one(new_user)
-    return "created"
+    return json.dumps({"msg": "created"})
 
 #Checks login credentials
 @app.route('/login', methods=['POST'])
@@ -64,10 +70,10 @@ def login():
     for document in users.find({}, projection = {"_id" : False}):
         if document["netid"] == attempt['netid']:
             if document["password"] == attempt['password']:
-                return "correct"
+                return json.dumps({"msg": "correct"} )
             else:
-                return "incorrect"
-    return "incorrect"
+                return json.dumps({"msg": "incorrect information"})
+    return json.dumps({"msg": "user not found"})
 
 if __name__ == "__main__":
     app.run()
