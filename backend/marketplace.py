@@ -2,6 +2,7 @@
 #delete
 #prices, user, item name, image array
 import pymongo
+import json
 from pymongo import MongoClient
 from flask import Flask, request
 from flask_cors import CORS
@@ -51,9 +52,9 @@ def add_user():
     new_user = request.get_json()
     for document in users.find({}, projection={"_id": False}):
         if document["netid"] == new_user['netid']:
-            return "exists"
+            return stringify({"msg": "exists"})
     users.insert_one(new_user)
-    return "created"
+    return stringify({"msg": "created"})
 
 #Checks login credentials
 @app.route('/login', methods=['POST'])
@@ -64,10 +65,10 @@ def login():
     for document in users.find({}, projection = {"_id" : False}):
         if document["netid"] == attempt['netid']:
             if document["password"] == attempt['password']:
-                return "correct"
+                return stringify({"msg": "correct"} )
             else:
-                return "incorrect"
-    return "incorrect"
+                return stringify({"msg": "incorrect information"})
+    return stringify({"msg": "user not found"})
 
 if __name__ == "__main__":
     app.run()
