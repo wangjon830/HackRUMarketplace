@@ -1,0 +1,35 @@
+a {
+  text-decoration: none;
+}
+
+.products {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.products a:hover {
+  color: #ff8000;
+}
+
+.products li {
+  flex: 0 1 20rem;
+  list-style-type: none;
+  padding: 0;
+  margin: 1rem;
+}
+
+.product-name {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.product-price {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.product-image {
+  max-width: 20rem;
+  max-height: 20rem;
+}
