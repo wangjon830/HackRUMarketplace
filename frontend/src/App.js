@@ -84,9 +84,6 @@ class App extends React.Component {
                     <Route path="/settings/transaction" exact={true} component={TransactionsScreen}/>
                     <Route path="/settings/listings" exact={true} component={ListingsScreen}/>
               </main>
-              <footer>
-                  All rights reserved      
-              </footer>
           </div>
           </BrowserRouter>
         );
