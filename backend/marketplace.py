@@ -36,24 +36,29 @@ def textFormat(text):
     newtext = list(newtext.split(" "))
     #print(newtext)
     return newtext
-
-#Search items in database
+    
+#Search items in database - basic search
 @app.route('/search', methods=['GET'])
 def search():
     db = client['marketplace']
     items = db['items']
-    items.create_index([('tags',1)])
-    items.create_index([('title',1)])
-    items.create_index([('description',1)])
+    items.create_index([('tags', 1)])
+    items.create_index([('title', 1)])
+    items.create_index([('description', 1)])
     search_info = request.get_json()
-
-    search_term = search_info['search_term'].lower()
-    #match terms in tags,title and description
-    search_tags = items.find({'tags': {'$elemMatch': { '$eq' : search_term } } })
-    search_title = items.find({'title': {'$regex': ".*" + search_term + ".*"  } } )
-    search_desc = items.find({'description': {'$regex': ".*" + search_term + ".*" } })
     search_items = []
-    search_items.extend(list(search_tags)) 
+    
+    search_term = search_info['search_term'].lower()
+    search_t = textFormat(search_term)
+    #match terms in tags,title and description
+    for tags in search_t:
+        search_tags = items.find({'tags': {'$elemMatch': { '$eq' : tags } } })
+        search_items.extend(list(search_tags))
+    
+    search_title = items.find({'title': {'$regex': ".*" + search_term + ".*"  } })
+    search_desc = items.find({'description': {'$regex': ".*" + search_term + ".*" } })
+    
+     
     search_items.extend(list(search_title))
     search_items.extend(list(search_desc))
     #string similarity- leveshtein algorithm for scanning title and description
@@ -64,7 +69,7 @@ def search():
             
             title_t = textFormat(title)
             desc_t = textFormat(desc)
-            search_t = textFormat(search_term)
+            
             flag = 0
             for input_1 in search_t:
                 for input_2 in title_t:
