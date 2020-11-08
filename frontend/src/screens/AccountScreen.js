@@ -2,6 +2,7 @@ import React from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import Modal from 'react-modal';
 import {observer} from "mobx-react";
+import {Link} from 'react-router-dom';
 import UserStore from '../stores/UserStore';
 
 import AccountSidebar from "../components/AccountSidebar";
@@ -179,7 +180,12 @@ class AccountScreen extends React.Component{
                     <div id="settingsErrorMessage">{this.state.settingsErrorMessage}</div>
                 </div>
             </Modal>
-            <AccountSidebar/>
+            <div id="AccountOptions" className = "sidenav">
+                <Link to="/settings/account"><div className="navItem"><settingActive/>&nbsp;&nbsp;Personal&nbsp;Information</div></Link>
+                <Link to="/settings/security"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Login&nbsp;&&nbsp;Security</div></Link>
+                <Link to="/settings/transaction"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your&nbsp;Transactions</div></Link>
+                <Link to="/settings/listings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your&nbsp;Listings</div></Link>
+            </div>
             <div className = "settings">
                 <div className = "headText"><h1>Personal&nbsp;Information<hr/></h1></div>
                 <div style={{display: "flex"}}>

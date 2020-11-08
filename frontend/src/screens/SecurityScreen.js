@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {observer} from "mobx-react";
 import UserStore from '../stores/UserStore';
-
+import {Link} from 'react-router-dom';
 import AccountSidebar from "../components/AccountSidebar";
 
 function SecurityScreen(props){
@@ -36,10 +36,14 @@ function SecurityScreen(props){
           return;
       }
     }
-
     return( 
     <div>
-        <AccountSidebar/>
+        <div id="AccountOptions" className = "sidenav">
+            <Link to="/settings/account"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Personal&nbsp;Information</div></Link>
+            <Link to="/settings/security"><div className="navItem"><settingActive/>&nbsp;&nbsp;Login&nbsp;&&nbsp;Security</div></Link>
+            <Link to="/settings/transaction"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your&nbsp;Transactions</div></Link>
+            <Link to="/settings/listings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your&nbsp;Listings</div></Link>
+        </div>
         <div className = "settings">
             <div className = "headText"><h1>Login&nbsp;&&nbsp;Security&nbsp;Settings<hr/></h1></div>
             <div className = "settingsItem">
@@ -54,6 +58,7 @@ function SecurityScreen(props){
             </div>
             <div className = "settingsItem">
                 <h3>Password</h3>
+                <p id="UserLocation">*****</p>
                 <br/>
               <form action="">
                 <input className="smallInput" type="text" id="oldPassword" name="oldPassword" placeholder="Old Password.."/>

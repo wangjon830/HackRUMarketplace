@@ -6,7 +6,12 @@ import data from '../data';
 function ListingsScreen(props){
     return( 
     <div>
-        <AccountSidebar/>
+        <div id="AccountOptions" className = "sidenav">
+            <Link to="/settings/account"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Personal&nbsp;Information</div></Link>
+            <Link to="/settings/security"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Login&nbsp;&&nbsp;Security</div></Link>
+            <Link to="/settings/transaction"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your&nbsp;Transactions</div></Link>
+            <Link to="/settings/listings"><div className="navItem"><settingActive/>&nbsp;&nbsp;Your&nbsp;Listings</div></Link>
+        </div>
         <div className = "settings">
             <div className = "headText"><h1>Your&nbsp;Listings<hr/></h1></div>
             <ul className="products">
