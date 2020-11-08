@@ -9,6 +9,14 @@ from bson.json_util import dumps
 from pymongo import MongoClient
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import base64
+import io
+import os
+
+# Imports the Google Cloud client library
+from google.cloud import vision
+# Create instance of Google vision API
+client = vision.ImageAnnotatorClient()
 
 # Create instance of Flask App
 app = Flask(__name__)
@@ -19,16 +27,68 @@ connection_url = 'mongodb+srv://ruteam:ruscrew@cluster0.bvss2.mongodb.net/market
 client = pymongo.MongoClient(connection_url)
 
 # Clean up and standardize text
-
-
 def textFormat(text):
     newtext = ""
     for a in text:
         if a.isalpha() == True or a.isspace() == True:
             newtext += a
-    newtext.lower()
+    newtext = newtext.lower()
+    newtext = newtext.replace("\n", "")
+    newtext = newtext.rstrip(" ")
     newtext = list(newtext.split(" "))
+    newtext = list(dict.fromkeys(newtext))
     return newtext
+
+
+#base64 to img file
+def base64toImg(src):
+    src = src[src.find(',')+1:]
+    #print(src)
+    file_content = base64.b64decode(src)
+    with open("autoML.png", "wb") as f:
+        f.write(file_content)
+
+def detect_tags(path):
+    # Loads the image into memory
+    with io.open(path, 'rb') as image_file:
+        content = image_file.read()
+
+    image = vision.Image(content=content)
+
+    # Performs label detection on the image file
+    response = client.label_detection(image=image)
+    labels = response.label_annotations
+
+    total = ''
+    for label in labels:
+        total += label.description + " "
+    labels_t = textFormat(total)
+    return labels_t
+
+def detect_text(path):
+    """Detects text in the file."""
+    from google.cloud import vision
+    import io
+    client = vision.ImageAnnotatorClient()
+
+    with io.open(path, 'rb') as image_file:
+        content = image_file.read()
+
+    image = vision.Image(content=content)
+    
+    response = client.text_detection(image=image)
+    texts = response.text_annotations
+    total = ''
+    for t in texts:
+        total += t.description + " "
+    texts_t = textFormat(total)
+    return texts_t
+    if response.error.message:
+        raise Exception(
+            '{}\nFor more info on error messages, check: '
+            'https://cloud.google.com/apis/design/errors'.format(
+                response.error.message))
+
 
 # Gets item from ID
 @app.route('/getID', methods=['GET'])
@@ -124,12 +184,18 @@ def add_item():
     db = client['marketplace']
     items = db['items']
     new_item = request.get_json()
+
+    for imgs in new_item['images']:
+        base64toImg(imgs)
+        for tags in new_item['categories']:
+            if tags == 'textbook':
+                new_item['categories'].extend(detect_text("autoML.png"))
+                break
+            else:
+                new_item['categories'].extend(detect_tags("autoML.png")) 
+                break
     new_entry = items.insert_one(new_item)
     return json.dumps({"success": True, "id": str(new_entry.inserted_id)})
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 
 # Edit Items in database
 @app.route('/editItem', methods=['POST'])
@@ -141,6 +207,15 @@ def edit_item():
     item = items.find(my_query)
     for x in item:
         items.delete_one(x)
+    for imgs in new_item['images']:
+        base64toImg(imgs)
+        for tags in new_item['categories']:
+            if tags == 'textbook':
+                new_item['categories'].append(detect_text("autoML.png"))
+                break
+            else:
+                new_item['categories'].append(detect_tags("autoML.png"))
+                break
     items.insert_one(new_item)
     return "success"
 
