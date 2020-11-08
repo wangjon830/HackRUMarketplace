@@ -3,6 +3,7 @@
 #prices, user, item name, image array
 import pymongo
 import json
+import textdistance as td
 from bson import ObjectId
 from bson.json_util import dumps
 from pymongo import MongoClient
@@ -25,6 +26,15 @@ def removeduplicate(it):
             seen.append(x)
     return seen
 
+def textFormat(text):
+    newtext = ""
+    for a in text:
+        if a.isalpha() == True or a.isspace() == True:
+            newtext+=a
+    newtext = list(newtext.split(" "))
+    #print(newtext)
+    return newtext
+
 #Search items in database
 @app.route('/search', methods=['GET'])
 def search():
@@ -44,6 +54,40 @@ def search():
     search_items.extend(list(search_tags)) 
     search_items.extend(list(search_title))
     search_items.extend(list(search_desc))
+
+    for query in items.find():
+        try:
+            desc = query["description"]
+            title = query["title"]
+            
+            title_t = textFormat(title)
+            desc_t = textFormat(desc)
+            search_t = textFormat(search_term)
+            flag = 0
+            for input_1 in search_t:
+                for input_2 in title_t:
+                    #print(td.levenshtein.normalized_similarity(input_1, input_2))
+                    if td.levenshtein.normalized_similarity(input_1, input_2) > .5:
+                        search_items.append(query)
+                        print(query)
+                        flag = 1
+                    if flag == 1:
+                        break
+                if flag == 1:
+                    break
+                
+                for input_3 in desc_t:
+                    #print(td.levenshtein.normalized_similarity(input_1, input_3))
+                    if td.levenshtein.normalized_similarity(input_1, input_3) > .5:
+                        search_items.append(query)
+                        flag = 1
+                        break
+                    if flag == 1:
+                        break
+                if flag == 1:
+                    break
+        except:
+            pass
     jsondata = dumps(search_items)
     jsonlist = json.loads(jsondata)
     jsons = { repr(each): each for each in jsonlist }.values()
