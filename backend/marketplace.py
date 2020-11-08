@@ -33,8 +33,8 @@ def textFormat(text):
 def getID():
     db = client['marketplace']
     items = db['items']
-    get_info = request.get_json()
-    my_query = {"_id": ObjectId(get_info['_id'])}
+    id = request.args.get('id')
+    my_query = {"_id": ObjectId(id)}
     item = items.find(my_query)
     for x in item:
         print("item found")
@@ -50,10 +50,10 @@ def search():
     items.create_index([('tags', 1)])
     items.create_index([('title', 1)])
     items.create_index([('description', 1)])
-    search_info = request.get_json()
+
     search_items = []
 
-    search_term = search_info['search_term'].lower()
+    search_term = request.args.get('searchTerm')
     search_t = textFormat(search_term)
     # match terms in tags, title and description
     for tags in search_t:
@@ -122,8 +122,9 @@ def add_item():
     db = client['marketplace']
     items = db['items']
     new_item = request.get_json()
-    items.insert_one(new_item)
-    return "success"
+    new_entry = items.insert_one(new_item)
+    return json.dumps({"success": True, "id": str(new_entry.inserted_id)})
+
 
 # Edit Items in database
 @app.route('/editItem', methods=['POST'])
