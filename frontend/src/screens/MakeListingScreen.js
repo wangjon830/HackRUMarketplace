@@ -1,14 +1,25 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
+import React,{useState} from 'react';
 import AccountSidebar from "../components/AccountSidebar";
+import {Link} from 'react-router-dom';
 import data from '../data';
 
-function ListingsScreen(props){
+function MakeListingScreen(props){
+    const product = data.products.find(x=>x._id === props.match.params.id);
+    const [currentImage, setImage] = useState(0);
+    const changeImage = (change)=>{
+        var newImage = currentImage + change;
+        if(newImage >= product.images.length)
+            newImage = 0;
+        else if (newImage < 0)
+            newImage = product.images.length - 1;
+        setImage(newImage)
+    }
+
     return( 
     <div>
         <AccountSidebar/>
         <div className = "settings">
-            <div className = "headText"><h1>Your&nbsp;Listings<hr/></h1></div>
+            <div className = "headText"><h1>Your Transactions<hr/></h1></div>
             <ul className="products">
                 {data.products.map(product=>
                 <li>
@@ -31,4 +42,4 @@ function ListingsScreen(props){
     )
 }
 
-export default ListingsScreen;
+export default MakeListingScreen;

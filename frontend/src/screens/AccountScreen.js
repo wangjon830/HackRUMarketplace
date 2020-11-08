@@ -7,7 +7,7 @@ function AccountScreen(props){
     <div>
         <AccountSidebar/>
         <div className = "settings">
-            <div className = "headText"><h1>Personal Information<hr/></h1></div>
+            <div className = "headText"><h1>Personal&nbsp;Information<hr/></h1></div>
             <div className = "settingsItem">
                 <h3>Profile Picture</h3>
                 <div className="profilePic"><img src="" alt="Profile Picture"></img></div>

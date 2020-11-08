@@ -6,7 +6,7 @@ function SecurityScreen(props){
     <div>
         <AccountSidebar/>
         <div className = "settings">
-            <div className = "headText"><h1>Login & Security Settings<hr/></h1></div>
+            <div className = "headText"><h1>Login&nbsp;&&nbsp;Security&nbsp;Settings<hr/></h1></div>
             <div className = "settingsItem">
                 <h3>Email</h3>
                 <p id="Email">jw1303@scarletmail.rutgers.edu</p>

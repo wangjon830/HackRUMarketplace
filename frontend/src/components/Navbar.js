@@ -6,10 +6,13 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import HomeIcon from '@material-ui/icons/Home';
 import CloseIcon from '@material-ui/icons/Close';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import AddIcon from '@material-ui/icons/Add';
 import {observer} from "mobx-react";
 import UserStore from '../stores/UserStore';
 
 import AccountDropdown from './AccountDropdown';
+import NotificationDropdown from './NotificationDropdown';
 
 function Navbar(props){
     const [sidebarOpen, setSidebar] = useState(false);
@@ -47,8 +50,9 @@ function Navbar(props){
             </form>
         </div>
         <div className="header-links">
-            <a href="watchlist.html"><VisibilityIcon style={{marginRight:"0.2rem"}}/>Watchlist</a>
-            <Link to="/settings/account"><AccountCircleIcon style={{marginRight:"0.2rem"}}/>Account&nbsp;Settings</Link>
+            {UserStore.loggedIn && <Link to="/makeListing"><AddIcon style={{marginRight:"0.2rem"}}/>New&nbsp;Listing</Link>}
+            {UserStore.loggedIn && <Link to="/watchlist"><VisibilityIcon style={{marginRight:"0.2rem"}}/>Watchlist</Link>}
+            {UserStore.loggedIn &&  <NotificationDropdown/>}
             {UserStore.loggedIn ? <AccountDropdown/> : <Link to="/login"><ExitToAppIcon style={{marginRight:"0.2rem"}}/>Sign&nbsp;In</Link>}
         </div>
         <aside className="sidebar">

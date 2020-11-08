@@ -19,7 +19,7 @@ function TransactionsScreen(props){
     <div>
         <AccountSidebar/>
         <div className = "settings">
-            <div className = "headText"><h1>Your Transactions<hr/></h1></div>
+            <div className = "headText"><h1>Your&nbsp;Transactions<hr/></h1></div>
             <ul className="products">
                 {data.products.map(product=>
                 <li>
