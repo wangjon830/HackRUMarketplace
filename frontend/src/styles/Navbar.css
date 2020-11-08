@@ -76,3 +76,6 @@
 .sidebar-close-btn{
     border:none;
 }
+.header-links{
+    min-width:20%;
+}
