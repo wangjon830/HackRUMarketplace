@@ -19,6 +19,8 @@ connection_url = 'mongodb+srv://ruteam:ruscrew@cluster0.bvss2.mongodb.net/market
 client = pymongo.MongoClient(connection_url)
 
 # Clean up and standardize text
+
+
 def textFormat(text):
     newtext = ""
     for a in text:
@@ -124,7 +126,10 @@ def add_item():
     new_item = request.get_json()
     new_entry = items.insert_one(new_item)
     return json.dumps({"success": True, "id": str(new_entry.inserted_id)})
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
 # Edit Items in database
 @app.route('/editItem', methods=['POST'])
@@ -139,7 +144,7 @@ def edit_item():
     items.insert_one(new_item)
     return "success"
 
-#Delete user from database
+# Delete user from database
 @app.route('/deleteUser', methods=['POST'])
 def delete_user():
     db = client['marketplace']
@@ -163,7 +168,7 @@ def add_user():
     users.insert_one(new_user)
     return json.dumps({"success": True, "msg": "Account successfully created", "firstName": document["firstName"], "lastName": document["lastName"], "email": document["email"]})
 
-#Edit User details
+# Edit User details
 @app.route('/editUser', methods=['POST'])
 def edit_user():
     db = client['marketplace']
@@ -171,8 +176,11 @@ def edit_user():
     new_user = request.get_json()
     my_query = {"email": new_user['email']}
     user = users.find(my_query)
+    password = ''
     for x in user:
+        password = x['password']
         users.delete_one(x)
+    new_user['password'] = password
     users.insert_one(new_user)
     return "success"
 
@@ -189,6 +197,28 @@ def login():
             else:
                 return json.dumps({"success": False, "msg": "Incorrect password"})
     return json.dumps({"success": False, "msg": "No account exists for this email"})
+
+# Get user info
+@app.route('/getAccount', methods=['GET'])
+def getAccount():
+    db = client['marketplace']
+    users = db['users']
+    new_user = request.get_json()
+    for document in users.find({}, projection={"_id": False}):
+        if document["email"] == new_user['email']:
+            return json.dumps({
+                "success": True,
+                "msg": "Account found",
+                "firstName": document["firstName"],
+                "lastName": document["lastName"],
+                "profilePic": document["profilePic"],
+                "email": document["email"],
+                "phone": document["phone"],
+                "facebook": document["facebook"],
+                "instagram": document["instagram"]
+            })
+    return json.dumps({"success": False, "msg": "Account not found"})
+
 
 if __name__ == "__main__":
     app.run()

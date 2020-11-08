@@ -5,57 +5,58 @@ import {observer} from "mobx-react";
 import {Link} from 'react-router-dom';
 import UserStore from '../stores/UserStore';
 
-import AccountSidebar from "../components/AccountSidebar";
-
 class AccountScreen extends React.Component{
     constructor(){
       super();
       this.state={
         modalOpen: false,
-        firstName: '',
-        lastName: '',
-        email: '',
+        firstName: UserStore.firstName,
+        lastName: UserStore.lastName,
+        email: UserStore.email,
         location: '',
         phone: '',
+        facebook: '',
+        instagram: '',
+        snapchat: ''
       }
     }
 
     async componentDidMount(){
-        try{
-          let res = await fetch('http://127.0.0.1:5000/getAccount', {
-              method: 'post',
-              headers:{
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                  email: UserStore.email
-              })
-          })
+        // try{
+        //   let res = await fetch('http://127.0.0.1:5000/getAccount', {
+        //       method: 'get',
+        //       headers:{
+        //           'Accept': 'application/json',
+        //           'Content-Type': 'application/json'
+        //       },
+        //       body: JSON.stringify({
+        //           email: UserStore.email
+        //       })
+        //   })
 
-          let result = await res.json();
+        //   let result = await res.json();
 
-          if(result && result.success){
-              this.setState({
-                firstName: result.firstName,
-                lastName: result.lastName,
-                email: result.email,
-                location: result.location,
-                phone: result.phone,
-                facebook: result.facebook,
-                instagram: result.instagram,
-                snapchat: result.snapchat
-              });
-          }
-          else{
-              console.log("Could not get account info")
-              return;
-          }
-        }
-        catch(e){
-            console.log(e);
-            return;
-        }
+        //   if(result && result.success){
+        //       this.setState({
+        //         firstName: result.firstName,
+        //         lastName: result.lastName,
+        //         email: result.email,
+        //         location: result.location,
+        //         phone: result.phone,
+        //         facebook: result.facebook,
+        //         instagram: result.instagram,
+        //         snapchat: result.snapchat
+        //       });
+        //   }
+        //   else{
+        //       console.log("Could not get account info")
+        //       return;
+        //   }
+        // }
+        // catch(e){
+        //     console.log(e);
+        //     return;
+        // }
     };
 
     setInput(property, val){
@@ -66,6 +67,40 @@ class AccountScreen extends React.Component{
       this.setState({
           [property]:val
       })
+    }
+
+    async submitChanges(){
+      try{
+        let res = await fetch('http://127.0.0.1:5000/editUser', {
+            method: 'post',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              firstName: this.state.firstName,
+              lastName: this.state.lastName,
+              email: this.state.email,
+              location: this.state.location,
+              phone: this.state.phone,
+              facebook: this.state.facebook,
+              instagram: this.state.instagram,
+              snapchat: this.state.snapchat
+            })
+        })
+
+        let result = await res.json();
+        if(result && result.success){
+            alert("Account updated");
+        }
+        else {
+            console.log("Could not update account")
+        }
+      }
+      catch(e){
+          console.log(e);
+          // this.reset();
+      }
     }
 
     render(){
@@ -173,7 +208,7 @@ class AccountScreen extends React.Component{
 
                     <button 
                         id='submitButton'
-                        onClick={this.submitChanges}
+                        onClick={()=>this.submitChanges()}
                     >
                         Submit
                     </button>  
