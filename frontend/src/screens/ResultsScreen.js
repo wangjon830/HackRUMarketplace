@@ -3,16 +3,18 @@ import {Link} from 'react-router-dom';
 import data from '../data';
 
 function ResultsScreen(props){
-    async function doSearch(){
+    var results;
+    function doSearch(){
         let searchTerm = document.getElementById("searchBar").value;
         document.getElementById('searchTerm').innerHTML = (searchTerm);
         var request = new XMLHttpRequest();
-        request.open("GET", 'http://127.0.0.1:5000/search?searchTerm=' + searchTerm);
+        request.open("GET", "http://127.0.0.1:5000/search?searchTerm=" + searchTerm);
         request.onload = function() {
-            this.setItem = request.response;
+            results = request.response;
+            console.log(results);
         };
         request.send();
-        console.log(request.response);
+        //console.log(this.setItem);
     }
     return <div className="homeContainer" onLoad={doSearch}>
         <div className="homeCategory" id="homeTextbooks">
