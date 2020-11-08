@@ -26,11 +26,13 @@ def removeduplicate(it):
             seen.append(x)
     return seen
 
+#clean up and standardize
 def textFormat(text):
     newtext = ""
     for a in text:
         if a.isalpha() == True or a.isspace() == True:
             newtext+=a
+    newtext.lower()
     newtext = list(newtext.split(" "))
     #print(newtext)
     return newtext
@@ -46,7 +48,7 @@ def search():
     search_info = request.get_json()
 
     search_term = search_info['search_term'].lower()
-    
+    #match terms in tags,title and description
     search_tags = items.find({'tags': {'$elemMatch': { '$eq' : search_term } } })
     search_title = items.find({'title': {'$regex': ".*" + search_term + ".*"  } } )
     search_desc = items.find({'description': {'$regex': ".*" + search_term + ".*" } })
@@ -54,7 +56,7 @@ def search():
     search_items.extend(list(search_tags)) 
     search_items.extend(list(search_title))
     search_items.extend(list(search_desc))
-
+    #string similarity- leveshtein algorithm for scanning title and description
     for query in items.find():
         try:
             desc = query["description"]
@@ -90,6 +92,7 @@ def search():
             pass
     jsondata = dumps(search_items)
     jsonlist = json.loads(jsondata)
+    #remove duplicate objects
     jsons = { repr(each): each for each in jsonlist }.values()
 
     return dumps(jsons)
