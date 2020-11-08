@@ -53,7 +53,7 @@ def search():
 
     search_items = []
 
-    search_term = 
+    search_term = request.args.get('searchTerm')
     search_t = textFormat(search_term)
     # match terms in tags, title and description
     for tags in search_t:
