@@ -1,51 +1,63 @@
-.listing {
+.itemContainer {
   display: flex;
+  flex: 1 1;
   justify-content: center;
   align-items: flex-start;
-  flex-wrap: wrap;
+  background-color: rgb(245, 241, 241);
 }
 
-.listing-images {
+.itemImages {
   width: 25%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-right: 3rem;
 }
 
-.image-view {
+.imageView {
   position: relative;
+  display: flex;
   width: 25rem;
+  height: 35rem;
+  justify-content: center;
+  align-items: center;
+  background-color: #3c3f40;
 }
 
-.image-view img {
+.imageView img {
+  object-fit: cover;
   width: 100%;
 }
 
-.image-arrow-btn,
+.imageArrowBtn,
 .gallery-arrow-btn {
   position: absolute;
   border: none;
   outline: none;
   height: 3rem;
   cursor: pointer;
+  background-color: #70dbff;
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
 }
 
-.image-arrow-btn {
+.imageArrowBtn {
   top: 50%;
   transform: translateY(-50%);
   opacity: 0.6;
 }
 
-.image-arrow-btn:hover {
+.imageArrowBtn:hover {
   opacity: 1;
 }
 
-.image-arrow-btn:first-of-type {
+.imageArrowBtn:first-of-type {
   left: 0;
+  transform: translate(-50%, -50%);
 }
 
-.image-arrow-btn:last-of-type {
+.imageArrowBtn:last-of-type {
   right: 0;
+  transform: translate(50%, -50%);
 }
 
 .gallery-arrow-btn:first-of-type {
@@ -129,6 +141,7 @@
   color: white;
   font-weight: bold;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 #watchlist-button {

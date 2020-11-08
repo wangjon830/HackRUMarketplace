@@ -12,9 +12,11 @@ class LoginScreen extends React.Component{
             buttonDisabled: false,
             errorMessage: '',
             modalOpen: false,
-            modalErrorMessage: '',
+            registerErrorMessage: '',
             loginSuccess: false
         }
+        this.doRegister = this.doRegister.bind(this);
+        this.setModalError = this.setModalError.bind(this);
     }
 
     componentDidMount(){
@@ -47,6 +49,13 @@ class LoginScreen extends React.Component{
             errorMessage: err,
             password: '',
             buttonDisabled: false
+        })
+    }
+
+    setModalError(errMessage){
+        document.getElementById("registerErrorMessage").style.display="block";
+        this.setState({
+            registerErrorMessage: errMessage
         })
     }
 
@@ -99,10 +108,12 @@ class LoginScreen extends React.Component{
         let password=document.getElementById("passwordInput").value;
         let confirmPassword=document.getElementById("confirmPasswordInput").value;
 
+        if(!firstName || !lastName || !email || !password || !confirmPassword){
+            this.setModalError("Please fill in all fields");
+            return;
+        }
         if(confirmPassword !== password){
-            this.setState({
-                modalErrorMessage: "Passwords do not match"
-            })
+            this.setModalError("Passwords do not match");
             return;
         }
 
@@ -122,25 +133,23 @@ class LoginScreen extends React.Component{
             })
 
             let result = await res.json();
+
             if(result && result.success){
                 this.saveAccountInfo(result);
             }
             else if(result && !result.success){
-                this.setState({
-                    modalErrorMessage: "An account already exists for this email"
-                })
+                this.setModalError("An account already exists for this email");
                 return;
             }
             else{
-                this.setState({
-                    modalErrorMessage: "Account could not be created"
-                })
+                this.setModalError("Account could not be created");
                 return;
             }
         }
         catch(e){
             console.log(e);
             this.reset();
+            return;
         }
     }
 
@@ -167,11 +176,17 @@ class LoginScreen extends React.Component{
                         backgroundColor: "rgba(0, 0, 15, 0.5)",
                         },
                         content: {
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        padding: 0,
-                        paddingBottom: "1rem",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            padding: 0,
+                            paddingBottom: "1rem",
+                            borderRadius: "10px",
+                            width: "500px",
+                            height: "550px",
+                            display: "flex",
+                            flexDirection: "column",
+                            zIndex: "0"
                         },
                     }}
                     >
@@ -223,6 +238,7 @@ class LoginScreen extends React.Component{
                         >
                             Register
                         </button>  
+                        <div id="registerErrorMessage">{this.state.registerErrorMessage}</div>
                     </div>
                 </Modal>
 

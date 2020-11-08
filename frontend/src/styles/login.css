@@ -34,9 +34,11 @@
   font-size: 1.3rem;
 }
 
-#errorMessage {
+#errorMessage,
+#registerErrorMessage {
+  display: none;
   background-color: #ff3d3d;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 5px;
   color: white;
   margin-top: 1rem;
@@ -74,16 +76,6 @@
   overflow: hidden;
 }
 
-.ReactModal__Content {
-  width: 500px;
-  /* width: 30vw; */
-  /* max-width: 550px; */
-  height: 550px;
-  display: flex;
-  flex-direction: column;
-  z-index: 0;
-}
-
 .ReactModal__Overlay {
   opacity: 0;
   z-index: 10;
@@ -109,7 +101,7 @@
 .modalHeader h1 {
   font-size: 40px;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin: 0.5rem 0;
 }
 
 .modalCloseBtn {
