@@ -57,6 +57,7 @@ class Navbar extends React.Component{
             this.openSidebar()
     }
 
+<<<<<<< HEAD
     openNotifications(){
         this.closeDropdown();
         this.setState({notificationsOpen: true})
@@ -239,6 +240,77 @@ class Navbar extends React.Component{
             </header>
             )
     }
+=======
+    return (
+    <header>
+        <div className="logo">
+            <button className="hamburger-btn" onClick={toggleSidebar}>
+                &#9776;
+            </button>
+            <div id="homeLarge"><Link to="/" style={{fontSize:"2rem"}}>RU&nbsp;Connect</Link></div>
+            <div id="homeSmall"><Link to="/"style={{fontSize:"2rem"}}><HomeIcon/></Link></div>
+        </div>
+        <div className="searchSection">
+            <form action="">
+              <input className="searchBar" type="text" placeholder="Search for Products..." name="search"/>
+              <button className="searchButton" type="submit"><SearchIcon/></button>
+            </form>
+        </div>
+        <div className="header-links">
+            {UserStore.loggedIn && <Link to="/makeListing"><AddIcon style={{marginRight:"0.2rem"}}/>New&nbsp;Listing</Link>}
+            {UserStore.loggedIn && <Link to="/watchlist"><VisibilityIcon style={{marginRight:"0.2rem"}}/>Watchlist</Link>}
+            {UserStore.loggedIn &&  <NotificationDropdown/>}
+            {UserStore.loggedIn ? <AccountDropdown/> : <Link to="/login"><ExitToAppIcon style={{marginRight:"0.2rem"}}/>Sign&nbsp;In</Link>}
+        </div>
+        <aside className="sidebar">
+            <div className="sidebarHead">
+                <h1 style={{padding:"2rem 1rem 0rem 1rem"}}>Shopping Categories<hr/></h1>
+                <button className="sidebar-close-btn" onClick={closeSidebar}><CloseIcon/></button>
+            </div>
+            <div className="sidebarCategory">
+                <h4 style={{padding:"1rem 1rem 0rem 1rem"}}>Product Type</h4>
+                <ul>
+                    <li>
+                        <a href="index.html">Textbooks</a>
+                    </li>
+                    <li>
+                        <a href="index.html">Appliances</a>
+                    </li>
+                    <li>
+                        <a href="index.html">Housing</a>
+                    </li>
+                    <li>
+                        <a href="index.html">Furniture</a>
+                    </li>
+                    <li>
+                        <a href="index.html">Electronics</a>
+                    </li>
+                    <li>
+                        <a href="index.html">Other</a>
+                    </li>
+                </ul>
+            </div>
+            <div className="sidebarCategory">
+                <h4 style={{padding:"1rem 1rem 0rem 1rem"}}>Seller Location</h4>
+                <ul>
+                    <li>
+                        <a href="index.html">Busch Campus</a>
+                    </li>
+                    <li>
+                        <a href="index.html">Livingston Campus</a>
+                    </li>
+                    <li>
+                        <a href="index.html">College Ave Campus</a>
+                    </li>
+                    <li>
+                        <a href="index.html">Cook/Douglass Campus</a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+    </header>
+    )
+>>>>>>> bfc7bd95b37edd43bedb9b8bcf11cac1e3aa0502
 }
 
 export default observer(withRouter(Navbar));
