@@ -31,7 +31,7 @@ def textFormat(text):
     return newtext
 
 # Gets item from ID
-@app.route('/getID', methods=['GET'])
+@app.route('/getItem', methods=['GET'])
 def getID():
     db = client['marketplace']
     items = db['items']
