@@ -11,7 +11,8 @@ import './styles/Navbar.css';
 import './styles/AccountDropdown.css';
 import './styles/NotificationDropdown.css';
 import './styles/Account.css';
-import './styles/MakeListing.css'
+import './styles/MakeListing.css';
+import './styles/HomeScreen.css';
 
 import Navbar from './components/Navbar';
 import HomeScreen from './screens/HomeScreen';
