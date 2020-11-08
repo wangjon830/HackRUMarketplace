@@ -1,7 +1,6 @@
 import React,{useState} from 'react';
 import {Link} from 'react-router-dom';
 import data from '../data';
-import '../styles/Account.css'
 
 function TransactionsScreen(props){
     const product = data.products.find(x=>x._id === props.match.params.id);
@@ -18,10 +17,10 @@ function TransactionsScreen(props){
     return( 
     <div>
         <div id="AccountOptions" className = "sidenav">
-            <Link to="/AccountSettings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Personal Information</div></Link>
-            <Link to="/SecuritySettings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Login & Security</div></Link>
-            <Link to="/TransactionsSettings"><div className="navItem"><settingActive/>&nbsp;&nbsp;Your Transactions</div></Link>
-            <Link to="/ListingsSettings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Listings</div></Link>
+            <Link to="/settings/account"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Personal Information</div></Link>
+            <Link to="/settings/security"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Login & Security</div></Link>
+            <Link to="/settings/transaction"><div className="navItem"><settingActive/>&nbsp;&nbsp;Your Transactions</div></Link>
+            <Link to="/settings/listings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Listings</div></Link>
         </div>
         <div className = "settings">
             <div className = "headText"><h1>Your Transactions<hr/></h1></div>
