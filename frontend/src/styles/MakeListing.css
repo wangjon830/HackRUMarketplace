@@ -1,0 +1,66 @@
+.listing{
+    display:block;
+    position:relative;
+    width:50vw;
+    margin: 0 25% 0 25%;
+    
+}
+
+.listingHead{
+    position:relative;
+    width:100%;
+    text-align: center;
+}
+
+.listingForm{
+    text-align: center;
+    width:80%;
+    margin: 0 10% 0 10%;
+    text-align: left;
+}
+
+.listingValue{
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.listingValue sectionHead{
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.listingValue .wideInput{
+    width:100%;
+    font-size: 20px;
+    padding: 10px 5px 10px 5px;
+    margin: 2px;
+}
+
+.listingValue .narrowInput{
+    width:30%;
+    font-size: 20px;
+    padding: 10px 5px 10px 5px;
+    margin: 2px;
+}
+.listingValue .mediumInput{
+    width:50%;
+    font-size: 18px;
+    padding: 5px;
+    margin: 2px;
+}
+
+.listing .buttonDark {
+  background-color: grey;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+}
+.listing .buttonDark:hover {
+  background-color: #5a5a5a;
+}

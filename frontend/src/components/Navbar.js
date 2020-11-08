@@ -78,6 +78,9 @@ function Navbar(props){
                     <li>
                         <a href="index.html">Electronics</a>
                     </li>
+                    <li>
+                        <a href="index.html">Other</a>
+                    </li>
                 </ul>
             </div>
             <div className="sidebarCategory">
