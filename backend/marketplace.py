@@ -4,8 +4,9 @@
 import pymongo
 import json
 from bson import ObjectId
+from bson.json_util import dumps
 from pymongo import MongoClient
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 #Create instance of Flask App
@@ -21,10 +22,23 @@ client = pymongo.MongoClient(connection_url)
 def search():
     db = client['marketplace']
     items = db['items']
+    items.create_index([('tags',1)])
+    items.create_index([('title',1)])
+    items.create_index([('description',1)])
     search_info = request.get_json()
-    my_query = {"tag": search_info['tag']}
-    searched_items = items.find(my_query) 
-    return items
+
+    search_term = search_info['search_term'].lower()
+    
+    search_tags = items.find({'tags': {'$elemMatch': { '$eq' : search_term } } })
+    search_title = items.find({'title': {'$regex': ".*" + search_term + ".*"  } } )
+    search_desc = items.find({'description': {'$regex': ".*" + search_term + ".*" } })
+    search_items = []
+    search_items.extend(list(search_tags)) 
+    search_items.extend(list(search_title))
+    search_items.extend(list(search_desc))
+    
+    jsondata = dumps(search_items)
+    return jsondata
 
 #Deletes Item from items database
 @app.route('/deleteItem', methods=['POST'])
