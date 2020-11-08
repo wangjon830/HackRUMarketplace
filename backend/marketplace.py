@@ -91,7 +91,7 @@ def detect_text(path):
 
 
 # Gets item from ID
-@app.route('/getID', methods=['GET'])
+@app.route('/getItem', methods=['GET'])
 def getID():
     db = client['marketplace']
     items = db['items']
