@@ -40,9 +40,6 @@ const App = () => {
                 <Route path="/makeListing" exact={true} component={MakeListingScreen}/>
                 <Route path="/watchlist" exact={true} component={WatchlistScreen}/>
             </main>
-            <footer>
-                All rights reserved      
-            </footer>
         </div>
         </BrowserRouter>
     );
