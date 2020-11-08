@@ -16,6 +16,7 @@ class LoginScreen extends React.Component{
             loginSuccess: false
         }
         this.doRegister = this.doRegister.bind(this);
+        this.reset = this.reset.bind(this);
         this.setModalError = this.setModalError.bind(this);
     }
 
@@ -97,7 +98,7 @@ class LoginScreen extends React.Component{
         }
         catch(e){
             console.log(e);
-            this.reset();
+            // this.reset();
         }
     }
 

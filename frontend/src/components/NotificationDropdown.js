@@ -1,25 +1,16 @@
 import React,{useState} from 'react';
-import {Link, useHistory} from 'react-router-dom';
+import {Link, useHistory, withRouter} from 'react-router-dom';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
 import {observer} from "mobx-react";
-import UserStore from '../stores/UserStore';
 
-function NotificationDropdown(){
+const NotificationDropdown = ({notificationsOpen, openNotifications, closeNotifications}) => {
     let history = useHistory();
-    const [notificationsOpen, setNotifications] = useState(false);
-
-    const openNotifications = ()=>{
-        setNotifications(true)
-        document.querySelector(".notifications").style.display="block";
-    }
-
-    const closeNotifications = ()=>{
-        setNotifications(false)
-        document.querySelector(".notifications").style.display="none";
-    }
+    history.listen((location, action) => {
+        // closeNotifications();
+    });
 
     const toggleNotifications = ()=>{
         if(notificationsOpen)
@@ -30,7 +21,7 @@ function NotificationDropdown(){
 
     return (
         <div style={{position:"relative"}}>
-            <button className="dropdownButton" onClick={()=>toggleNotifications()}>
+            <button className="dropdownButton" style={{marginLeft: "1rem"}} onClick={()=>toggleNotifications()}>
                 <NotificationsIcon style={{float:"left"}}/>
                 {notificationsOpen ? <ArrowDropUpIcon/> : <ArrowDropDownIcon/>}
             </button> 
@@ -69,4 +60,4 @@ function NotificationDropdown(){
     )
 }
 
-export default observer(NotificationDropdown);
+export default observer(withRouter(NotificationDropdown));
