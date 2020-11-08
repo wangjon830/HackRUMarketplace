@@ -28,6 +28,20 @@ def textFormat(text):
     newtext = list(newtext.split(" "))
     return newtext
 
+# Gets item from ID
+@app.route('/getID', methods=['GET'])
+def getID():
+    db = client['marketplace']
+    items = db['items']
+    get_info = request.get_json()
+    my_query = {"_id": ObjectId(get_info['_id'])}
+    item = items.find(my_query)
+    for x in item:
+        print("item found")
+        return dumps(x)
+    return "item not found"
+
+
 # Search items in database
 @app.route('/search', methods=['GET'])
 def search():
