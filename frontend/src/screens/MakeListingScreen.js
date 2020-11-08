@@ -1,9 +1,78 @@
-import React,{useState} from 'react';
-import AccountSidebar from "../components/AccountSidebar";
-import {Link} from 'react-router-dom';
-import data from '../data';
+import React,{useState, useEffect} from 'react';
+import {useHistory} from 'react-router-dom';
 
 function MakeListingScreen(props){
+    const[error, setError] = useState('');
+    const history = useHistory();
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
+    const postListing = async()=>{
+        let name = document.getElementById("name").value;
+        let description = document.getElementById("description").value;
+        let price = document.getElementById("price").value;
+        let trade = document.getElementById("trade").value === "on" ? true : false;
+        let categories = [];
+        if(document.getElementById("textbook").checked)
+            categories.push("textbooks");
+        if(document.getElementById("appliance").checked)
+            categories.push("appliance");
+        if(document.getElementById("housing").checked)
+            categories.push("housing");
+        if(document.getElementById("furniture").checked)
+            categories.push("furniture");
+        if(document.getElementById("electronics").checked)
+            categories.push("electronics");
+        let condition = document.getElementById("condition").value;
+        var images = new Array();
+        let imageInput = document.getElementById("images");
+        if (imageInput.files) {
+            for(let i = 0; i < imageInput.files.length; i++){
+                images.push(await toBase64(imageInput.files[i]))
+            }
+        }
+        // console.log(name, description, price, trade, categories, condition, images);
+
+        try{
+            let res = await fetch('http://127.0.0.1:5000/addItem', {
+                method: 'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    description,
+                    price,
+                    trade,
+                    categories,
+                    condition,
+                    images
+                })
+            })
+    
+            let result = await res.json();
+    
+            if(result && result.success){
+                console.log("Item posted");
+                history.push("/listings/" + result.id)
+            }
+            else{
+                setError("Listing could not be posted");
+                return;
+            }
+        }
+        catch(e){
+            console.log(e);
+            return;
+        }
+    }
+
     return( 
     <div className = "listing">
         <div >
@@ -45,18 +114,22 @@ function MakeListingScreen(props){
                   <div className="listingValue">
                       <sectionHead><label for="">Condition</label></sectionHead><br/>
                       <select id="condition" className="mediumInput" name="">
-                        <option value="">Heavily Used</option>
-                        <option value="">Slightly Used</option>
-                        <option value="">Brand New</option>
+                        <option value="Heavily used">Heavily used</option>
+                        <option value="Slightly used">Slightly used</option>
+                        <option value="Brand new">Brand new</option>
                       </select>
                   </div>
                   <div className="listingValue" id="listingImages">
                       <sectionHead><label for="">Images</label></sectionHead><br/>
+                      <img id="preview" style={{height:"20rem"}}/>
                       <input id="images" type="file" name="filefield" multiple="multiple"/>
                   </div>
                   <br/><br/>
-                  <input type="submit" className="buttonDark" value="Submit"/>
+                  <button type="button" className="buttonDark" onClick={postListing}>Submit</button>
                 </form>
+                <div className="errorMessage" id="listingErrorMessage" style={{display: error.length > 0 ? "block" : "none"}}>
+                    {error}
+                </div>
             </div>
         </div>
     </div>

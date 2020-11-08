@@ -32,11 +32,12 @@ class Navbar extends React.Component{
     }
 
     componentDidUpdate(prevProps) {
-        console.log(this.props);
         if (this.props.location.pathname !== prevProps.location.pathname) {
             this.closeSidebar();
-            this.closeNotifications();
-            this.closeDropdown();
+            if(UserStore.loggedIn){
+                this.closeNotifications();
+                this.closeDropdown();
+            }
         }
     }
 

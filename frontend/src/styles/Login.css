@@ -34,8 +34,7 @@
   font-size: 1.3rem;
 }
 
-#errorMessage,
-#registerErrorMessage {
+.errorMessage {
   display: none;
   background-color: #ff3d3d;
   padding: 0.5rem 1rem;
