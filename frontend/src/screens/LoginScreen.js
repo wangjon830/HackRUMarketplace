@@ -35,7 +35,7 @@ class LoginScreen extends React.Component{
     }
 
     reset(){
-        document.getElementById("errorMessage").style.display="none";
+        document.getElementById("loginErrorMessage").style.display="none";
         this.setState({
             email: '',
             password: '',
@@ -45,7 +45,7 @@ class LoginScreen extends React.Component{
     }
 
     badLogin(err){
-        document.getElementById("errorMessage").style.display="block";
+        document.getElementById("loginErrorMessage").style.display="block";
         this.setState({
             errorMessage: err,
             password: '',
