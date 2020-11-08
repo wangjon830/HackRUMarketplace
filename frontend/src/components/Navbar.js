@@ -93,7 +93,30 @@ class Navbar extends React.Component{
         else
             this.openDropdown()
     }
+    async doSearch(){
+        let searchTerm = document.getElementById("searchBar").value;
+        document.getElementById('searchTerm').innerHTML = (searchTerm);
+        try{
+            let res = await fetch('http://127.0.0.1:5000/search', {
+                method: 'get',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    searchTerm
+                })
+            })
 
+            let result = await res.json();
+            console.log(result);
+        }
+        catch(e){
+            console.log(e);
+            //this.reset();
+            return;
+        }
+    }
     render(){
         return (
             <header>
@@ -106,8 +129,8 @@ class Navbar extends React.Component{
                 </div>
                 <div className="searchSection">
                     <form action="">
-                      <input className="searchBar" type="text" placeholder="Search for Products..." name="search"/>
-                      <button className="searchButton" type="submit"><SearchIcon/></button>
+                      <input id="searchBar" className="searchBar" type="text" placeholder="Search for Products..." name="search"/>
+                      <button className="searchButton" type="button" onClick={this.doSearch}><Link to="/searchResults"><SearchIcon/></Link></button>
                     </form>
                 </div>
                 <div className="headerLinks">
