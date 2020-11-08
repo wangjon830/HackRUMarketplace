@@ -16,6 +16,7 @@ p {
 
 body {
   margin: 0;
+  background-color:#f8f2f0;
 }
 
 main {
@@ -27,10 +28,11 @@ main {
 header {
   display: flex;
   justify-content: space-between;
-  background-color: #ff2626;
+  background-color: #363636;
   align-items: center;
   padding: 0.5rem;
   margin: 0;
+  border-bottom: 3px solid #eb4e4e;
 }
 
 header a {
@@ -58,7 +60,7 @@ header a {
 }
 
 .header-links a:hover {
-  color: #ff7d52;
+  color: #fd5252;
 }
 
 .hamburger-btn {

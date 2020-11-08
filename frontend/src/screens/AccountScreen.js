@@ -1,16 +1,15 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import data from '../data';
-import '../styles/Account.css';
 
 function AccountScreen(props){
     return( 
     <div>
         <div id="AccountOptions" className = "sidenav">
-            <Link to="/AccountSettings"><div className="navItem"><settingActive/>&nbsp;&nbsp;Personal Information</div></Link>
-            <Link to="/SecuritySettings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Login & Security</div></Link>
-            <Link to="/TransactionsSettings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Transactions</div></Link>
-            <Link to="/ListingsSettings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Listings</div></Link>
+            <Link to="/settings/account"><div className="navItem"><settingActive/>&nbsp;&nbsp;Personal Information</div></Link>
+            <Link to="/settings/security"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Login & Security</div></Link>
+            <Link to="/settings/transaction"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Transactions</div></Link>
+            <Link to="/settings/listings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Listings</div></Link>
         </div>
         <div className = "settings">
             <div className = "headText"><h1>Personal Information<hr/></h1></div>

@@ -7,6 +7,8 @@ import './styles/App.css';
 import './styles/home.css';
 import './styles/login.css';
 import './styles/product.css';
+import './styles/Navbar.css';
+import './styles/Account.css';
 
 import Navbar from './components/Navbar';
 import HomeScreen from './screens/HomeScreen';
