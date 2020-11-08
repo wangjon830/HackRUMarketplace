@@ -33,10 +33,8 @@ class ItemScreen extends React.Component{
 
     async componentDidMount(){
         var request = new XMLHttpRequest();
-        request.open("GET", "http://127.0.0.1:5000/getItem/?id=" + this.props.match.params.id);
-        request.onload = function() {
-            this.setItem = request.response;
-        };
+        request.open("GET", "http://127.0.0.1:5000/getItem?id=" + this.props.match.params.id);
+        request.onload = () =>this.setItem(JSON.parse(request.response));
         request.send();
         console.log(request.response);
     }
