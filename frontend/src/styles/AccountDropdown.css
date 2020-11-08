@@ -1,0 +1,89 @@
+.dropdownButton {
+  border: none;
+  outline: none;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color:white;
+}
+
+.profileThumbnail {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+}
+
+.arrowUp {
+  position: absolute;
+  transform: translateY(-100%);
+  right: 1rem;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid white;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  width: 300px;
+  margin-top: 1rem;
+  right: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 5px #b5b9ba;
+  padding-bottom: 2rem;
+  z-index:10;
+}
+
+.dropdownHeader {
+  display: flex;
+  border-bottom: 1px solid#b5b9ba;
+}
+
+.dropdownProfilePic {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  margin: 1rem;
+  margin-right: 0;
+  border: 1px solid #b5b9ba;
+}
+
+#dropdownName {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+#dropdownEmail {
+  font-size: 0.9rem;
+}
+
+.dropdown a {
+  margin: 0;
+}
+
+.dropdown button {
+  outline: none;
+  border: none;
+  background: none;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dropdown button:hover {
+  background-color: #dedede;
+}
+
+.dropdownIcon {
+  color: #6b6b6b;
+  margin-right: 0.5rem;
+}

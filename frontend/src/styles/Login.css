@@ -1,0 +1,144 @@
+.loginContainer {
+  display: flex;
+  flex: 1 1;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(245, 241, 241);
+}
+
+.loginContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+  height: 50%;
+}
+
+.loginForm {
+  display: flex;
+  width: 100%;
+  flex: 1 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  padding-top: 0.5rem;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 3px 3px 15px #888888;
+}
+
+.loginForm input {
+  margin-bottom: 2rem;
+  line-height: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.errorMessage {
+  display: none;
+  background-color: #ff3d3d;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  color: white;
+  margin-top: 1rem;
+}
+
+#loginButton,
+#registerButton {
+  border: none;
+  outline: none;
+  padding: 1rem;
+  font-size: 18px;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+#loginButton {
+  background-color: #22a1f5;
+}
+
+#registerButton {
+  background-color: #22e305;
+}
+
+#registerModalButton {
+  color: #388eff;
+  border: none;
+  outline: none;
+  background-color: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.ReactModal__Body--open {
+  overflow: hidden;
+}
+
+.ReactModal__Overlay {
+  opacity: 0;
+  z-index: 10;
+  position: absolute;
+  transition: opacity 500ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
+
+.modalHeader {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid black;
+  padding-left: 1rem;
+}
+
+.modalHeader h1 {
+  font-size: 40px;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.modalCloseBtn {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 30px;
+  font-weight: bold;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.modalBody {
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 3rem;
+}
+
+.modalBody input {
+  border-radius: 5px;
+  border: 1px solid #c7c7c7;
+  line-height: 2.5rem;
+  font-size: 1.3rem;
+  margin-bottom: 2rem;
+  padding-left: 0.5rem;
+}
+
+.modalBody input:focus {
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  border: 1px solid #4dccff;
+  outline: none;
+}
+
+#firstNameInput,
+#lastNameInput {
+  width: 45%;
+}
