@@ -5,11 +5,11 @@ RU connect is a fully realized online marketplace designed by and for Rutgers Un
 Provides students an intuitive means of selling and buying the various commodities that only students need.
 
 # Frontend
-register account
-account login
-account settings
-post listings
-display listings
+We used React.js to create a web app for users to interact with and post items on the marketplace. 
+Users can register accounts to post items on the site, which is stored in a Mongo database.
+To communicate with our user and items database for login/display, we used GET and POST requests to our backend.
+Users can customize their profile and display socials and information.
+Items are marked with tags which can be searched for and specified by the user.
 
 # Backend
 We utilized Python with Flask and MongoDB api to host our backend server and build user and item functionality.
