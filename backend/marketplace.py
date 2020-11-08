@@ -18,14 +18,6 @@ CORS(app)
 connection_url = 'mongodb+srv://ruteam:ruscrew@cluster0.bvss2.mongodb.net/marketplace?retryWrites=true&w=majority'
 client = pymongo.MongoClient(connection_url)
 
-def removeduplicate(it):
-    seen = []
-    for x in it:
-        if x not in seen:
-            yield x
-            seen.append(x)
-    return seen
-
 #clean up and standardize
 def textFormat(text):
     newtext = ""
@@ -47,7 +39,7 @@ def search():
     items.create_index([('description', 1)])
     search_info = request.get_json()
     search_items = []
-    
+
     search_term = search_info['search_term'].lower()
     search_t = textFormat(search_term)
     #match terms in tags,title and description
@@ -58,7 +50,6 @@ def search():
     search_title = items.find({'title': {'$regex': ".*" + search_term + ".*"  } })
     search_desc = items.find({'description': {'$regex': ".*" + search_term + ".*" } })
     
-     
     search_items.extend(list(search_title))
     search_items.extend(list(search_desc))
     #string similarity- leveshtein algorithm for scanning title and description
@@ -120,6 +111,19 @@ def add_item():
     db = client['marketplace']
     items = db['items']
     new_item = request.get_json()
+    items.insert_one(new_item)
+    return "success"
+    
+#Edit Items in database
+@app.route('/editItem', methods=['POST'])
+def edit_item():
+    db = client['marketplace']
+    items = db['items']
+    new_item = request.get_json()
+    my_query = {"_id": ObjectId(new_item['_id'])}
+    item = items.find(my_query)
+    for x in item:
+        items.delete_one(x)
     items.insert_one(new_item)
     return "success"
 
