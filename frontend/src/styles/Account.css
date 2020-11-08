@@ -3,83 +3,109 @@
 }
 
 .sidenav {
-    height:100vh;
-    width: 15vw;
-    text-align: left;
-    position:relative;
-    overflow:hidden;
-    padding: 2rem 1rem 2rem 20rem;
-    float:left;
+  height: 100vh;
+  width: 15vw;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 1rem 2rem 20rem;
+  float: left;
 }
 
 .sidenav .navItem {
-    padding: 12px 12px 12px 0px;
-    text-decoration: none;
-    font-size: 15px;
-    border: 1px solid #bcbcbc;
-    color:black;
-    background-color:white;
+  padding: 12px 12px 12px 0px;
+  text-decoration: none;
+  font-size: 15px;
+  border: 1px solid #bcbcbc;
+  color: black;
+  background-color: white;
 }
 .navItem settingActive {
-    position:relative;
-    padding: 12px 3px 12px 3px;
-    background-color:#d34f4f;
-    background-clip: padding-box;
+  position: relative;
+  padding: 12px 3px 12px 3px;
+  background-color: #d34f4f;
+  background-clip: padding-box;
 }
 .navItem settingStatus {
-    position:relative;
-    padding: 12px 3px 12px 3px;
-    background-clip: padding-box;
+  position: relative;
+  padding: 12px 3px 12px 3px;
+  background-clip: padding-box;
 }
 .navItem:hover settingStatus {
-    background-color:#d34f4f;
+  background-color: #d34f4f;
 }
-.sidenav .navItem:hover{
-    background-color: #efefef;
+.sidenav .navItem:hover {
+  background-color: #efefef;
 }
 
-.settings{
-    position:relative;
-    float:left;
-    padding: 1rem 2rem 2rem 1rem;
-    line-height: 10px;
-    max-width:50%;
+.settings {
+  position: relative;
+  float: left;
+  padding: 1rem 2rem 2rem 1rem;
+  line-height: 10px;
+  max-width: 50%;
 }
-.settingsItem{
-    padding: 0px 0px 2rem 0px;
+.settingsItem {
+  padding: 0px 0px 2rem 0px;
 }
-.settingsItem button{
-    background-color: grey;
-    border-radius:5px;
-    border:none;
-    color: white;
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 15px;
+.settingsItem button {
+  background-color: grey;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
 }
-.settingsItem button:hover{
-    background-color: #5a5a5a;
+.settingsItem button:hover {
+  background-color: #5a5a5a;
 }
-.settingsItem input{
-    padding: 5px 10px;
+.settingsItem input {
+  padding: 5px 10px;
 }
-.smallInput{
-    width: 10vw;
+.smallInput {
+  width: 10vw;
 }
-.largeInput{
-    width:20vw;
-    height:15vh;
+.largeInput {
+  width: 20vw;
+  height: 15vh;
 }
-.profilePic{
-    height: 200px;
-    width: 200px;
-    border: 1px solid black;
+.profilePic {
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
+  border: 1px solid black;
 }
-.products{
-    line-height:normal;
+.products {
+  line-height: normal;
 }
-.socialLinks{
-    line-height:30px;
+.socialLinks {
+  line-height: 30px;
+}
+
+#settingsEditButton {
+  margin-left: 5rem;
+  margin-top: 1rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  color: white;
+  border: none;
+  outline: none;
+  background-color: #1cbfff;
+  border-radius: 5px;
+}
+
+#settingsErrorMessage {
+  display: none;
+}
+
+#settingsModalBody input {
+  line-height: 1.5rem;
+  font-size: 1rem;
 }

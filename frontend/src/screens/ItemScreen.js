@@ -2,7 +2,7 @@ import React,{useState} from 'react';
 import {Link} from 'react-router-dom';
 import data from '../data';
 
-function ProductScreen(props){
+function ItemScreen(props){
     const product = data.products.find(x=>x._id === props.match.params.id);
     const [currentImage, setImage] = useState(0);
     const changeImage = (change)=>{
@@ -15,22 +15,19 @@ function ProductScreen(props){
     }
 
     return (
-    <div>
-        <div>
-            <Link to="/">Back to home</Link>
-        </div>
-        <div className="listing">
-            <div className="listing-images">
-                <div className="image-view">
+    <div style={{flex: "1 1"}}>
+        <div className="itemContainer">
+            <div className="itemImages">
+                <div className="imageView">
                     <img src={product.images[currentImage]} alt="product"/>
-                    <button className="image-arrow-btn" onClick={() => changeImage(-1)}>&lt;</button>
-                    <button className="image-arrow-btn" onClick={() => changeImage(1)}>&gt;</button>
+                    <button className="imageArrowBtn" onClick={() => changeImage(-1)}>&lt;</button>
+                    <button className="imageArrowBtn" onClick={() => changeImage(1)}>&gt;</button>
                 </div>
                 <div className="image-gallery">
                     <button className="gallery-arrow-btn" onClick={() => changeImage(-1)}>&lt;</button>
                     <button className="gallery-arrow-btn" onClick={() => changeImage(1)}>&gt;</button>
-                    {product.images.map(image=>
-                        <img src={image}/>)}
+                    {product.images.map((image, i)=>
+                        <img src={image} style={{border: currentImage == i ? "2px solid red" : "none"}}/>)}
                 </div>
             </div>
             <div className="listing-details">
@@ -56,4 +53,4 @@ function ProductScreen(props){
     )
 }
 
-export default ProductScreen;
+export default ItemScreen;
