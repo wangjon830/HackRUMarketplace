@@ -44,6 +44,7 @@ class Navbar extends React.Component{
     openSidebar(){
         this.setState({sidebarOpen: true})
         document.querySelector(".sidebar").classList.add("open");
+        
     }
 
     closeSidebar(){
@@ -93,7 +94,10 @@ class Navbar extends React.Component{
         else
             this.openDropdown()
     }
-
+    getSearch(){
+        let searchTerm = document.getElementById("searchBar").value;
+        document.getElementById('searchTerm').innerHTML = (searchTerm);
+    }
     render(){
         return (
             <header>
@@ -106,8 +110,8 @@ class Navbar extends React.Component{
                 </div>
                 <div className="searchSection">
                     <form action="">
-                      <input className="searchBar" type="text" placeholder="Search for Products..." name="search"/>
-                      <button className="searchButton" type="submit"><SearchIcon/></button>
+                      <input id="searchBar" className="searchBar" type="text" placeholder="Search for Products..." name="search_term"/>
+                      {!(window.location.pathname).includes('searchResults') ? <button className="searchButton" type="submit"><Link to="/searchResults"><SearchIcon/></Link></button> : <button className="searchButton" type="button" onClick={this.getSearch}><Link><SearchIcon/></Link></button>}
                     </form>
                 </div>
                 <div className="headerLinks">
@@ -130,22 +134,22 @@ class Navbar extends React.Component{
                                 <div className="dropdownButtons">
                                     <Link>
                                         <button>
-                                            From Me: pee
+                                            From admin: Hello
                                         </button>
                                     </Link>
                                     <Link>
                                         <button>
-                                            From Rahul: i love u
+                                            From admin: I would like to discuss this posting
                                         </button>
                                     </Link>
                                     <Link>
                                         <button>
-                                            From God: die
+                                            From admin: Offer for item
                                         </button>
                                     </Link>
                                     <Link>
                                         <button>
-                                            From ???: help
+                                            From admin: I would like to discuss this posting
                                         </button>
                                     </Link>
                                 </div>
