@@ -18,9 +18,7 @@ CORS(app)
 connection_url = 'mongodb+srv://ruteam:ruscrew@cluster0.bvss2.mongodb.net/marketplace?retryWrites=true&w=majority'
 client = pymongo.MongoClient(connection_url)
 
-# clean up and standardize
-
-
+# Clean up and standardize text
 def textFormat(text):
     newtext = ""
     for a in text:
@@ -28,10 +26,9 @@ def textFormat(text):
             newtext += a
     newtext.lower()
     newtext = list(newtext.split(" "))
-    # print(newtext)
     return newtext
 
-# Search items in database - basic search
+# Search items in database
 @app.route('/search', methods=['GET'])
 def search():
     db = client['marketplace']
@@ -44,7 +41,7 @@ def search():
 
     search_term = search_info['search_term'].lower()
     search_t = textFormat(search_term)
-    # match terms in tags,title and description
+    # match terms in tags, title and description
     for tags in search_t:
         search_tags = items.find({'tags': {'$elemMatch': {'$eq': tags}}})
         search_items.extend(list(search_tags))
@@ -67,7 +64,6 @@ def search():
             flag = 0
             for input_1 in search_t:
                 for input_2 in title_t:
-                    #print(td.levenshtein.normalized_similarity(input_1, input_2))
                     if td.levenshtein.normalized_similarity(input_1, input_2) > .5:
                         search_items.append(query)
                         print(query)
@@ -76,9 +72,7 @@ def search():
                         break
                 if flag == 1:
                     break
-
                 for input_3 in desc_t:
-                    #print(td.levenshtein.normalized_similarity(input_1, input_3))
                     if td.levenshtein.normalized_similarity(input_1, input_3) > .5:
                         search_items.append(query)
                         flag = 1
@@ -130,6 +124,18 @@ def edit_item():
     items.insert_one(new_item)
     return "success"
 
+#Delete user from database
+@app.route('/deleteUser', methods=['POST'])
+def delete_user():
+    db = client['marketplace']
+    users = db['users']
+    del_user = request.get_json()
+    my_query = {"email": del_user['email']}
+    user = users.find(my_query)
+    for x in user:
+        users.delete_one(x)
+    return "success"
+
 # Adds new user to database
 @app.route('/register', methods=['POST'])
 def add_user():
@@ -141,6 +147,19 @@ def add_user():
             return json.dumps({"success": False, "msg": "An account exists for this email"})
     users.insert_one(new_user)
     return json.dumps({"success": True, "msg": "Account successfully created", "firstName": document["firstName"], "lastName": document["lastName"], "email": document["email"]})
+
+#Edit User details
+@app.route('/editUser', methods=['POST'])
+def edit_user():
+    db = client['marketplace']
+    users = db['users']
+    new_user = request.get_json()
+    my_query = {"email": new_user['email']}
+    user = users.find(my_query)
+    for x in user:
+        users.delete_one(x)
+    users.insert_one(new_user)
+    return "success"
 
 # Checks login credentials
 @app.route('/login', methods=['POST'])
@@ -155,7 +174,6 @@ def login():
             else:
                 return json.dumps({"success": False, "msg": "Incorrect password"})
     return json.dumps({"success": False, "msg": "No account exists for this email"})
-
 
 if __name__ == "__main__":
     app.run()

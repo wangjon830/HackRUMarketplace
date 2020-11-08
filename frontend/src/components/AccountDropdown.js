@@ -58,14 +58,9 @@ function AccountDropdown(){
                     </div>
                 </div>
                 <div className="dropdownButtons">
-                    <Link>
+                    <Link to="/settings/account">
                         <button>
                             <SettingsIcon className="dropdownIcon"/>Account settings
-                        </button>
-                    </Link>
-                    <Link>
-                        <button>
-                            <VisibilityIcon className="dropdownIcon"/>Watchlist
                         </button>
                     </Link>
                     <button>

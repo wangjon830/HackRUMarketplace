@@ -11,7 +11,16 @@
   padding: 2rem 1rem 2rem 20rem;
   float: left;
 }
-
+@media only screen and (max-width: 1000px) {
+  .sidenav {
+    padding: 2rem 1rem 2rem 1rem;
+  }
+}
+@media only screen and (min-width: 1000px) {
+  .sidenav {
+    padding: 2rem 1rem 2rem 17rem;
+  }
+}
 .sidenav .navItem {
   padding: 12px 12px 12px 0px;
   text-decoration: none;
