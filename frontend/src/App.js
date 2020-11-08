@@ -24,6 +24,7 @@ import TransactionsScreen from './screens/TransactionsScreen';
 import ListingsScreen from './screens/ListingsScreen';
 import MakeListingScreen from './screens/MakeListingScreen';
 import WatchlistScreen from './screens/WatchlistScreen';
+import ResultsScreen from './screens/ResultsScreen';
 
 const App = () => {
     return (
@@ -40,6 +41,7 @@ const App = () => {
                 <Route path="/settings/listings" exact={true} component={ListingsScreen}/>
                 <Route path="/makeListing" exact={true} component={MakeListingScreen}/>
                 <Route path="/watchlist" exact={true} component={WatchlistScreen}/>
+                <Route path="/searchResults" exact={true} component={ResultsScreen}/>
             </main>
         </div>
         </BrowserRouter>
