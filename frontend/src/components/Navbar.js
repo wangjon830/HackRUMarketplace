@@ -6,6 +6,10 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import HomeIcon from '@material-ui/icons/Home';
 import CloseIcon from '@material-ui/icons/Close';
+import {observer} from "mobx-react";
+import UserStore from '../stores/UserStore';
+
+import AccountDropdown from './AccountDropdown';
 
 function Navbar(props){
     const [sidebarOpen, setSidebar] = useState(false);
@@ -44,8 +48,8 @@ function Navbar(props){
         </div>
         <div className="header-links">
             <a href="watchlist.html"><VisibilityIcon style={{marginRight:"0.2rem"}}/>Watchlist</a>
-            <Link to="/settings/account"><AccountCircleIcon style={{marginRight:"0.2rem"}}/> Account&nbsp;Settings</Link>
-            <a href="/login"><ExitToAppIcon style={{marginRight:"0.2rem"}}/>Sign&nbsp;In</a>
+            <Link to="/settings/account"><AccountCircleIcon style={{marginRight:"0.2rem"}}/>Account&nbsp;Settings</Link>
+            {UserStore.loggedIn ? <AccountDropdown/> : <Link to="/login"><ExitToAppIcon style={{marginRight:"0.2rem"}}/>Sign&nbsp;In</Link>}
         </div>
         <aside className="sidebar">
             <div className="sidebarHead">
@@ -94,4 +98,4 @@ function Navbar(props){
     )
 }
 
-export default Navbar;
+export default observer(Navbar);

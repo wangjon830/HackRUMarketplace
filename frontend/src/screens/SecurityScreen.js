@@ -1,16 +1,10 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import data from '../data';
+import AccountSidebar from "../components/AccountSidebar";
 
 function SecurityScreen(props){
     return( 
     <div>
-        <div id="AccountOptions" className = "sidenav">
-            <Link to="/settings/account"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Personal Information</div></Link>
-            <Link to="/settings/security"><div className="navItem"><settingActive/>&nbsp;&nbsp;Login & Security</div></Link>
-            <Link to="/settings/transaction"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Transactions</div></Link>
-            <Link to="/settings/listings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Listings</div></Link>
-        </div>
+        <AccountSidebar/>
         <div className = "settings">
             <div className = "headText"><h1>Login & Security Settings<hr/></h1></div>
             <div className = "settingsItem">

@@ -1,16 +1,11 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import data from '../data';
+
+import AccountSidebar from "../components/AccountSidebar";
 
 function AccountScreen(props){
     return( 
     <div>
-        <div id="AccountOptions" className = "sidenav">
-            <Link to="/settings/account"><div className="navItem"><settingActive/>&nbsp;&nbsp;Personal Information</div></Link>
-            <Link to="/settings/security"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Login & Security</div></Link>
-            <Link to="/settings/transaction"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Transactions</div></Link>
-            <Link to="/settings/listings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Listings</div></Link>
-        </div>
+        <AccountSidebar/>
         <div className = "settings">
             <div className = "headText"><h1>Personal Information<hr/></h1></div>
             <div className = "settingsItem">
@@ -18,7 +13,7 @@ function AccountScreen(props){
                 <div className="profilePic"><img src="" alt="Profile Picture"></img></div>
                 <br/>
               <form action="">
-                <button variant="secondary">Change Profile Picture</button>{' '}
+                <button variant="secondary">Change Profile Picture</button>
               </form>
             </div>
             <div className = "settingsItem">
@@ -28,7 +23,7 @@ function AccountScreen(props){
               <form action="">
                 <input className="smallInput" type="text" id="changeName" name="username" placeholder="New Name.."/>
                 &nbsp;
-                <button variant="secondary">Change Name</button>{' '}
+                <button variant="secondary">Change Name</button>
               </form>
             </div>
             <div className = "settingsItem">

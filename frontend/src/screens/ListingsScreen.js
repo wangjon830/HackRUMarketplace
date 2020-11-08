@@ -1,17 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import AccountSidebar from "../components/AccountSidebar";
 import data from '../data';
-
 
 function ListingsScreen(props){
     return( 
     <div>
-        <div id="AccountOptions" className = "sidenav">
-            <Link to="/settings/account"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Personal Information</div></Link>
-            <Link to="/settings/security"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Login & Security</div></Link>
-            <Link to="/settings/transaction"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your Transactions</div></Link>
-            <Link to="/settings/listings"><div className="navItem"><settingActive/>&nbsp;&nbsp;Your Listings</div></Link>
-        </div>
+        <AccountSidebar/>
         <div className = "settings">
             <div className = "headText"><h1>Your Listings<hr/></h1></div>
             <ul className="products">

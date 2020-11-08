@@ -3,11 +3,13 @@ import {extendObservable} from 'mobx';
 class UserStore{
     constructor() {
         extendObservable(this, {
-            loading: true,
-            isLoggedIn: false,
-            email: ''
+            loggedIn: false,
+            firstName: '',
+            lastName:'',
+            email: '',
+            profilePic: null
         })
     }
 }
 
-export default UserStore;
+export default new UserStore();
