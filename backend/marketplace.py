@@ -52,9 +52,9 @@ def add_user():
     new_user = request.get_json()
     for document in users.find({}, projection={"_id": False}):
         if document["netid"] == new_user['netid']:
-            return stringify({"msg": "exists"})
+            return json.dumps({"msg": "exists"})
     users.insert_one(new_user)
-    return stringify({"msg": "created"})
+    return json.dumps({"msg": "created"})
 
 #Checks login credentials
 @app.route('/login', methods=['POST'])
@@ -65,10 +65,10 @@ def login():
     for document in users.find({}, projection = {"_id" : False}):
         if document["netid"] == attempt['netid']:
             if document["password"] == attempt['password']:
-                return stringify({"msg": "correct"} )
+                return json.dumps({"msg": "correct"} )
             else:
-                return stringify({"msg": "incorrect information"})
-    return stringify({"msg": "user not found"})
+                return json.dumps({"msg": "incorrect information"})
+    return json.dumps({"msg": "user not found"})
 
 if __name__ == "__main__":
     app.run()
