@@ -9,6 +9,7 @@ import './styles/Login.css';
 import './styles/Item.css';
 import './styles/Navbar.css';
 import './styles/AccountDropdown.css';
+import './styles/NotificationDropdown.css';
 import './styles/Account.css';
 
 import Navbar from './components/Navbar';
@@ -19,6 +20,8 @@ import AccountScreen from './screens/AccountScreen';
 import SecurityScreen from './screens/SecurityScreen';
 import TransactionsScreen from './screens/TransactionsScreen';
 import ListingsScreen from './screens/ListingsScreen';
+import MakeListingScreen from './screens/MakeListingScreen';
+import WatchlistScreen from './screens/WatchlistScreen';
 
 const App = () => {
     return (
@@ -33,6 +36,8 @@ const App = () => {
                 <Route path="/settings/security" exact={true} component={SecurityScreen}/>
                 <Route path="/settings/transaction" exact={true} component={TransactionsScreen}/>
                 <Route path="/settings/listings" exact={true} component={ListingsScreen}/>
+                <Route path="/makeListing" exact={true} component={MakeListingScreen}/>
+                <Route path="/watchlist" exact={true} component={WatchlistScreen}/>
             </main>
             <footer>
                 All rights reserved      

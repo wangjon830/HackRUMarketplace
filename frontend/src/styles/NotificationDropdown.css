@@ -1,0 +1,33 @@
+.notifications {
+  display: none;
+  position: absolute;
+  width: 300px;
+  margin-top: 1rem;
+  right: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 5px #b5b9ba;
+  padding-bottom: 2rem;
+  z-index:10;
+}
+
+.notifications a {
+  margin: 0;
+}
+
+.notifications button {
+  outline: none;
+  border: none;
+  background: none;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+}
+
+.notifications button:hover {
+  background-color: #dedede;
+}
