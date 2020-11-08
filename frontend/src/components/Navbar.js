@@ -16,6 +16,7 @@ import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 import {observer} from "mobx-react";
 import UserStore from '../stores/UserStore';
 
+var results;
 class Navbar extends React.Component{
     constructor(){
         super();
@@ -94,10 +95,6 @@ class Navbar extends React.Component{
         else
             this.openDropdown()
     }
-    getSearch(){
-        let searchTerm = document.getElementById("searchBar").value;
-        document.getElementById('searchTerm').innerHTML = (searchTerm);
-    }
     render(){
         return (
             <header>
@@ -111,7 +108,7 @@ class Navbar extends React.Component{
                 <div className="searchSection">
                     <form action="">
                       <input id="searchBar" className="searchBar" type="text" placeholder="Search for Products..." name="search_term"/>
-                      {!(window.location.pathname).includes('searchResults') ? <button className="searchButton" type="submit"><Link to="/searchResults"><SearchIcon/></Link></button> : <button className="searchButton" type="button" onClick={this.getSearch}><Link><SearchIcon/></Link></button>}
+                      {!(window.location.pathname).includes('searchResults') ? <button className="searchButton" type="submit"><Link to="/searchResults"><SearchIcon/></Link></button> : <button className="searchButton" type="button"><Link><SearchIcon/></Link></button>}
                     </form>
                 </div>
                 <div className="headerLinks">
