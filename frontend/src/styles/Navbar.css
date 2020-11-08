@@ -1,0 +1,95 @@
+.sidebar .sidebarHead {
+  color: black;
+}
+.sidebar a {
+  color: black;
+  font-size: 20px;
+}
+.sidebar h4 {
+  color: black;
+  font-size: 20px;
+}
+.sidebar h1 {
+  color: black;
+  font-size: 25px;
+}
+.sidebar a:hover {
+  color: #fc4040;
+}
+.sidebar .sidebarCategory h4 {
+  line-height: 1px;
+}
+
+.category {
+  color: black;
+  font-size: 20px;
+}
+
+.searchBar {
+  float: left;
+  padding: 6px 10px;
+  margin-left: 16px;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+  height: 100%;
+  width: 70%;
+}
+
+.searchButton {
+  float: left;
+  border: none;
+  height: 100%;
+  width: auto;
+  max-width: 10%;
+  padding: 2.5px;
+  color: white;
+  background-color: red;
+}
+
+.searchSection {
+  margin-left: auto;
+  width: 40%;
+  min-width: 50vw;
+}
+
+#homeLarge {
+  float: left;
+}
+#homeSmall {
+  float: left;
+  height: 100%;
+  width: auto;
+  display: none;
+}
+
+@media (max-width: 1300px) {
+  #homeSmall {
+    display: inline-block;
+  }
+  #homeLarge {
+    display: none;
+  }
+}
+.hamburger-btn {
+  float: left;
+}
+.logo {
+  min-width: 15%;
+}
+.sidebar-close-btn {
+  border: none;
+}
+.headerLinks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 20%;
+}
+
+.headerButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+}
