@@ -2,29 +2,17 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import data from '../data';
 
-function HomeScreen(props){
+function ResultsScreen(props){
     async function doSearch(){
         let searchTerm = document.getElementById("searchBar").value;
         document.getElementById('searchTerm').innerHTML = (searchTerm);
-        try{
-            let res = await fetch('http://127.0.0.1:5000/search', {
-                method: 'get',
-                headers:{
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    
-                })
-            })
-
-            let result = await res.json();
-            console.log(result);
-        }
-        catch(e){
-            console.log(e);
-            return;
-        }
+        var request = new XMLHttpRequest();
+        request.open("GET", 'http://127.0.0.1:5000/search?searchTerm=' + searchTerm);
+        request.onload = function() {
+            this.setItem = request.response;
+        };
+        request.send();
+        console.log(request.response);
     }
     return <div className="homeContainer" onLoad={doSearch}>
         <div className="homeCategory" id="homeTextbooks">
@@ -50,4 +38,4 @@ function HomeScreen(props){
     </div>
 }
 
-export default HomeScreen;
+export default ResultsScreen;
