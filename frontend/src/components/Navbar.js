@@ -2,6 +2,7 @@ import React,{useState} from 'react';
 import {Link} from 'react-router-dom';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 function Navbar(props){
     const [sidebarOpen, setSidebar] = useState(false);
@@ -33,7 +34,7 @@ function Navbar(props){
         </div>
         <div className="header-links">
             <a href="watchlist.html"><VisibilityIcon style={{marginRight:"0.2rem"}}/>Watchlist</a>
-            <a href="signin.html"><ExitToAppIcon style={{marginRight:"0.2rem"}}/>Sign In</a>
+            <Link to="/login"><ExitToAppIcon style={{marginRight:"0.2rem"}}/>Sign In</Link>
         </div>
         <aside className="sidebar">
             <h3>Shopping Categories</h3>
