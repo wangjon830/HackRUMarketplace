@@ -17,6 +17,14 @@ CORS(app)
 connection_url = 'mongodb+srv://ruteam:ruscrew@cluster0.bvss2.mongodb.net/marketplace?retryWrites=true&w=majority'
 client = pymongo.MongoClient(connection_url)
 
+def removeduplicate(it):
+    seen = []
+    for x in it:
+        if x not in seen:
+            yield x
+            seen.append(x)
+    return seen
+
 #Search items in database
 @app.route('/search', methods=['GET'])
 def search():
@@ -36,9 +44,11 @@ def search():
     search_items.extend(list(search_tags)) 
     search_items.extend(list(search_title))
     search_items.extend(list(search_desc))
-    
     jsondata = dumps(search_items)
-    return jsondata
+    jsonlist = json.loads(jsondata)
+    jsons = { repr(each): each for each in jsonlist }.values()
+
+    return dumps(jsons)
 
 #Deletes Item from items database
 @app.route('/deleteItem', methods=['POST'])
