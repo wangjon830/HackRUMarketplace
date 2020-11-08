@@ -181,20 +181,20 @@ class AccountScreen extends React.Component{
             </Modal>
             <AccountSidebar/>
             <div className = "settings">
-                <div className = "headText"><h1>Personal Information<hr/></h1></div>
+                <div className = "headText"><h1>Personal&nbsp;Information<hr/></h1></div>
                 <div style={{display: "flex"}}>
                   <div className="settingsItem">
-                      <h3>Profile Picture</h3>
+                      <h3>Profile&nbsp;Picture</h3>
                       <img className="profilePic" src="/images/profile.jpg" alt="Profile Picture"/>
                       <br/>
                   </div>
                   <div className = "settingsItem" style={{marginLeft:"2rem"}}>
-                      <h3>Displayed Name</h3>
+                      <h3>Displayed&nbsp;Name</h3>
                       <p id="username">{UserStore.firstName + " " + UserStore.lastName}</p>
                       <br/>
                   </div>
                   <button id="settingsEditButton" onClick={()=>this.setState({modalOpen: true})}>
-                    <EditIcon style={{marginRight: "0.5rem"}}/>Edit info
+                    <EditIcon style={{marginRight: "0.5rem"}}/>Edit&nbsp;info
                   </button>
                 </div>
                 
@@ -211,9 +211,12 @@ class AccountScreen extends React.Component{
                 <div className = "settingsItem">
                     <h3>Social Links</h3>
                     <div className="socialLinks">
-                        <p><a id="Facebook" href="http://www.facebook.com">Facebook</a></p>
-                        <p><a id="Instagram" href="http://www.instagram.com">Instagram</a></p>
+                        <p>Facebook</p>
+                        <a id="Facebook" href={this.state.facebook}></a>
+                        <p>Instagram</p>
+                        <a id="Instagram" href={this.state.instagram}></a>
                         <p>Snapchat Username</p>
+                        <p>{this.state.snapchat}</p>
                     </div>
                     <br/>
                 </div>
