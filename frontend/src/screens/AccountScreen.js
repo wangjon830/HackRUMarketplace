@@ -60,7 +60,6 @@ class AccountScreen extends React.Component{
     };
 
     setInput(property, val){
-      val = val.trim();
       // if(val.length > 20){
       //     return;
       // }
@@ -194,14 +193,14 @@ class AccountScreen extends React.Component{
                           id="instagramInput"
                           type='type' 
                           placeholder="Instagram handle" 
-                          value={this.state.facebook}
+                          value={this.state.instagram}
                           onChange={(e) => this.setInput("instagram", e.target.value)}
                       />
                       <input 
                           id="snapchatInput"
                           type='type' 
                           placeholder="Snapchat username" 
-                          value={this.state.facebook}
+                          value={this.state.snapchat}
                           onChange={(e) => this.setInput("snapchat", e.target.value)}
                       />
                     </div>
@@ -224,14 +223,14 @@ class AccountScreen extends React.Component{
             <div className = "settings">
                 <div className = "headText"><h1>Personal&nbsp;Information<hr/></h1></div>
                 <div style={{display: "flex"}}>
-                  <div className="settingsItem">
+                  <div className="profilePictureContainer">
                       <h3>Profile&nbsp;Picture</h3>
                       <img className="profilePic" src="/images/profile.jpg" alt="Profile Picture"/>
                       <br/>
                   </div>
-                  <div className = "settingsItem" style={{marginLeft:"2rem"}}>
+                  <div style={{marginLeft:"2rem"}}>
                       <h3>Displayed&nbsp;Name</h3>
-                      <p id="username">{UserStore.firstName + " " + UserStore.lastName}</p>
+                      <p id="username">{this.state.firstName + " " + this.state.lastName}</p>
                       <br/>
                   </div>
                   <button id="settingsEditButton" onClick={()=>this.setState({modalOpen: true})}>
@@ -239,25 +238,33 @@ class AccountScreen extends React.Component{
                   </button>
                 </div>
                 
-                <div className = "settingsItem">
+                <div className = "settingsItem" style={{marginTop: "1rem"}}>
                     <h3>Location</h3>
-                    <p id="UserLocation">Busch Campus</p>
+                    <div id="UserLocation">{this.state.location}</div>
                     <br/>
                 </div>
                 <div className = "settingsItem">
                     <h3>Phone Number</h3>
-                    <p id="UserPhone">732-123-4567</p>
+                    <div id="UserPhone">{this.state.phone}</div>
                     <br/>
                 </div>
-                <div className = "settingsItem">
                     <h3>Social Links</h3>
                     <div className="socialLinks">
+                      <div className="settingsItem">
                         <p>Facebook</p>
-                        <a id="Facebook" href={this.state.facebook}></a>
-                        <p>Instagram</p>
-                        <a id="Instagram" href={this.state.instagram}></a>
-                        <p>Snapchat Username</p>
-                        <p>{this.state.snapchat}</p>
+                      <div><a id="Facebook" href={this.state.facebook}>{this.state.facebook}</a></div>
+                    </div>
+                    <div className="socialLinks">
+                    <div className="settingsItem">
+                      <p>Instagram</p>
+                      <div><a id="Instagram" href={this.state.instagram}>{this.state.instagram}</a></div>
+                      </div>
+                    </div>
+                    <div className="socialLinks">
+                    <div className="settingsItem">
+                      <p>Snapchat Username</p>
+                      <div><p>{this.state.snapchat}</p></div>
+                      </div>
                     </div>
                     <br/>
                 </div>

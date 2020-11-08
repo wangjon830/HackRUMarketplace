@@ -56,6 +56,8 @@
 }
 .settingsItem {
   padding: 0px 0px 2rem 0px;
+  display: flex;
+  align-items: center;
 }
 .settingsItem button {
   background-color: grey;
@@ -74,6 +76,18 @@
 .settingsItem input {
   padding: 5px 10px;
 }
+
+.settingsItem div {
+  background-color: #dedede;
+  flex: 1 1;
+  margin-left: 1.5rem;
+  border-radius: 5px;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+}
+
 .smallInput {
   width: 10vw;
 }
