@@ -130,6 +130,18 @@ def edit_item():
     items.insert_one(new_item)
     return "success"
 
+#Delete user from database
+@app.route('/deleteUser', methods=['POST'])
+def delete_user():
+    db = client['marketplace']
+    users = db['users']
+    del_user = request.get_json()
+    my_query = {"email": del_user['email']}
+    user = users.find(my_query)
+    for x in user:
+        users.delete_one(x)
+    return "success"
+
 # Adds new user to database
 @app.route('/register', methods=['POST'])
 def add_user():
@@ -141,6 +153,19 @@ def add_user():
             return json.dumps({"success": False, "msg": "An account exists for this email"})
     users.insert_one(new_user)
     return json.dumps({"success": True, "msg": "Account successfully created", "firstName": document["firstName"], "lastName": document["lastName"], "email": document["email"]})
+
+#Edit User details
+@app.route('/editUser', methods=['POST'])
+def edit_user():
+    db = client['marketplace']
+    users = db['users']
+    new_user = request.get_json()
+    my_query = {"email": new_user['email']}
+    user = users.find(my_query)
+    for x in user:
+        users.delete_one(x)
+    users.insert_one(new_user)
+    return "success"
 
 # Checks login credentials
 @app.route('/login', methods=['POST'])
