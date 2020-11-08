@@ -87,7 +87,7 @@ class LoginScreen extends React.Component{
         }
         catch(e){
             console.log(e);
-            this.resetForm();
+            this.reset();
         }
     }
 
