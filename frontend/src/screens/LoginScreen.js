@@ -239,7 +239,7 @@ class LoginScreen extends React.Component{
                         >
                             Register
                         </button>  
-                        <div id="registerErrorMessage">{this.state.registerErrorMessage}</div>
+                        <div className="errorMessage" id="registerErrorMessage">{this.state.registerErrorMessage}</div>
                     </div>
                 </Modal>
 
@@ -269,7 +269,7 @@ class LoginScreen extends React.Component{
 
                     <p style={{marginTop: "1rem"}}>New user?</p>
                     <button id="registerModalButton" onClick={()=>this.setState({modalOpen: true})}>Create an account</button>
-                    <div id="errorMessage">{this.state.errorMessage}</div>
+                    <div className="errorMessage" id="loginErrorMessage">{this.state.errorMessage}</div>
                 </div>
             </div>
             
