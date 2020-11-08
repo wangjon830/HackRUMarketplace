@@ -3,8 +3,30 @@ import {Link} from 'react-router-dom';
 import data from '../data';
 
 function HomeScreen(props){
+    async function doSearch(){
+        let searchTerm = document.getElementById("searchBar").value;
+        document.getElementById('searchTerm').innerHTML = (searchTerm);
+        try{
+            let res = await fetch('http://127.0.0.1:5000/search', {
+                method: 'get',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    
+                })
+            })
 
-    return <div className="homeContainer">
+            let result = await res.json();
+            console.log(result);
+        }
+        catch(e){
+            console.log(e);
+            return;
+        }
+    }
+    return <div className="homeContainer" onLoad={doSearch}>
         <div className="homeCategory" id="homeTextbooks">
             <div className="homeHeader">Search Results for <div id="searchTerm" style={{color:'#901818',display: 'inline-block'}}></div><hr/></div>
             <ul className="products">
