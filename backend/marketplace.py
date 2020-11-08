@@ -126,10 +126,7 @@ def add_item():
     new_item = request.get_json()
     new_entry = items.insert_one(new_item)
     return json.dumps({"success": True, "id": str(new_entry.inserted_id)})
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 
 # Edit Items in database
 @app.route('/editItem', methods=['POST'])
