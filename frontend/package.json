@@ -8,8 +8,11 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+<<<<<<< HEAD
     "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
+=======
+>>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
     "mobx": "^6.0.3",
     "mobx-react": "^7.0.4",
     "react": "^17.0.1",

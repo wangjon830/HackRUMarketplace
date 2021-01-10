@@ -10,6 +10,9 @@ import bcrypt
 from pymongo import MongoClient
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import base64
+import io
+import os
 
 # Create instance of Flask App
 app = Flask(__name__)

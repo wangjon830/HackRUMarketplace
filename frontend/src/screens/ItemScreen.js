@@ -20,7 +20,11 @@ class ItemScreen extends React.Component{
 
     setItem(itemJson){
         this.setState({
+<<<<<<< HEAD
             title: itemJson.title,
+=======
+            itemName: itemJson.name,
+>>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
             poster: itemJson.poster,
             description: itemJson.description,
             price: itemJson.price,
@@ -67,7 +71,11 @@ class ItemScreen extends React.Component{
                     </div>
                     <div className="listing-details">
                         <div className="listing-header">
+<<<<<<< HEAD
                             <h2 className="listing-name">{this.state.title}</h2>
+=======
+                            <h2 className="listing-name">{this.state.name}</h2>
+>>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
                             <p>Seller: <Link to="/">{this.state.poster}</Link></p>
                         </div>
                         <div className="listing-info">
