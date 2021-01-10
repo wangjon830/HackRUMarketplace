@@ -23,28 +23,25 @@ connection_url = 'mongodb+srv://ruteam:ruscrew@cluster0.bvss2.mongodb.net/market
 client = pymongo.MongoClient(connection_url)
 
 # Clean up and standardize text
-
-
-def textFormat(text):
-    newtext = ""
+def text_format(text):
+    new_text = ""
     for a in text:
-        if a.isalpha() == True or a.isspace() == True:
-            newtext += a
-    newtext.lower()
-    newtext = list(newtext.split(" "))
-    return newtext
+        if a.isalpha() or a.isspace():
+            new_text += a
+    new_text.lower()
+    new_text = list(new_text.split(" "))
+    return new_text
 
 # Gets item from ID
 @app.route('/getItem', methods=['GET'])
-def getID():
+def get_id():
     db = client['marketplace']
     items = db['items']
-    id = request.args.get('id')
-    my_query = {"_id": ObjectId(id)}
-    item = items.find(my_query)
-    for x in item:
+    id = request.args.get("id")
+    item = items.find_one({"_id": ObjectId(id)})
+    if item is not None:
         print("item found")
-        return dumps(x)
+        return dumps(item)
     return "item not found"
 
 
@@ -116,11 +113,11 @@ def delete_item():
     db = client['marketplace']
     items = db['items']
     del_item = request.get_json()
-    my_query = {"_id": ObjectId(del_item['_id'])}
-    item = items.find(my_query)
-    for x in item:
-        items.delete_one(x)
-    return "success"
+    item = items.find_one({"_id": ObjectId(del_item["_id"])})
+    if item is not None:
+        items.delete_one(item)
+        return "success"
+    return "failure"
 
 # Adds Item to items database
 @app.route('/addItem', methods=['POST'])
@@ -137,13 +134,14 @@ def add_item():
 def edit_item():
     db = client['marketplace']
     items = db['items']
-    new_item = request.get_json()
-    new_item['_id'] = ObjectId(new_item['_id'])
-    my_query = {"_id": new_item['_id']}
-    item = items.find(my_query)
-    for x in item:
-        items.delete_one(x)
-    items.insert_one(new_item)
+    updated_item = request.get_json()
+    updated_item['_id'] = ObjectId(updated_item['_id'])
+    items.update_one(
+        { '_id':  updated_item['_id']},
+        {
+            '$set': updated_item,
+        }
+    )
     return "success"
 
 # Delete user from database
@@ -152,11 +150,11 @@ def delete_user():
     db = client['marketplace']
     users = db['users']
     del_user = request.get_json()
-    my_query = {"email": del_user['email']}
-    user = users.find(my_query)
-    for x in user:
-        users.delete_one(x)
-    return "success"
+    user = users.find_one({"_id": ObjectId(del_user["_id"])})
+    if user is not None:
+        users.delete_one(user)
+        return "success"
+    return "failure"
 
 # Adds new user to database
 @app.route('/register', methods=['POST'])
@@ -164,13 +162,13 @@ def add_user():
     db = client['marketplace']
     users = db['users']
     new_user = request.get_json()
-    for document in users.find({}, projection={"_id": False}):
-        if document["email"] == new_user['email']:
-            return json.dumps({"success": False, "msg": "An account exists for this email"})
+    exist = users.find({"email": new_user["email"]})
+    if exist is not None:
+        return json.dumps({"success": False, "msg": "An account exists for this email"})
     users.insert_one(new_user)
     return json.dumps({"success": True, 
                         "msg": "Account successfully created", 
-                        'user': getUser(document)
+                        'user': get_user(document)
                     })
 
 # Edit User details
@@ -186,7 +184,6 @@ def edit_user():
             '$set': updated_user,
         }
     )
-
     return json.dumps({"success":True})
 
 # Checks login credentials
@@ -195,11 +192,12 @@ def login():
     db = client['marketplace']
     users = db['users']
     attempt = request.get_json()
-    for document in users.find({'email': attempt['email']}):
+    document = users.find_one({'email': attempt['email']})
+    if document is not None:
         if bcrypt.checkpw(attempt['password'].encode('utf-8'), document["hashedPassword"].encode('utf-8')):
             return json.dumps({"success": True, 
                                 "msg": "Login successful", 
-                                'user':getUser(document)
+                                'user':get_user(document)
                             })
         else:
             return json.dumps({"success": False, "msg": "Incorrect password"})
@@ -207,21 +205,21 @@ def login():
 
 # Get user info
 @app.route('/getAccount', methods=['GET'])
-def getAccount():
+def get_account():
     db = client['marketplace']
     users = db['users']
     new_user = request.get_json()
-    for document in users.find({}, projection={"_id": False}):
-        if document['email'] == new_user['email']:
-            return json.dumps({
-                'success': True,
-                'msg': 'Account found',
-                'user': getUser(document)
-            })
+    account = users.find_one({"_id": ObjectId(new_user["_id"])})
+    if account is not None:
+        return json.dumps({
+            'success': True,
+            'msg': 'Account found',
+            'user': get_user(document)
+        })
     return json.dumps({'success': False, 'msg': 'Account not found'})
 
 # turn user info into an object
-def getUser(user):
+def get_user(user):
     return {
                 '_id': str(user['_id']),
                 'firstName': user['firstName'],
