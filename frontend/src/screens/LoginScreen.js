@@ -2,6 +2,7 @@ import React from 'react';
 import {Redirect } from 'react-router-dom';
 import Modal from 'react-modal';
 import UserStore from '../stores/UserStore';
+var bcrypt = require('bcryptjs');
 
 class LoginScreen extends React.Component{
     constructor(props){
@@ -87,7 +88,8 @@ class LoginScreen extends React.Component{
 
             let result = await res.json();
             if(result && result.success){
-                this.saveAccountInfo(result);
+                // values must be saved as string in LocalStorage
+                this.saveAccountInfo(JSON.stringify(result.user));
             }
             else if(result && !result.success){
                 this.badLogin(result.msg);
@@ -118,6 +120,8 @@ class LoginScreen extends React.Component{
             return;
         }
 
+        let hashedPassword = await bcrypt.hash(password, 10)
+
         try{
             let res = await fetch('http://127.0.0.1:5000/register', {
                 method: 'post',
@@ -129,7 +133,7 @@ class LoginScreen extends React.Component{
                     firstName,
                     lastName,
                     email,
-                    password
+                    hashedPassword
                 })
             })
 
@@ -155,13 +159,8 @@ class LoginScreen extends React.Component{
     }
 
     saveAccountInfo(accountJson){
-        UserStore.loggedIn = true;
-        UserStore.firstName = accountJson.firstName;
-        UserStore.lastName = accountJson.lastName;
-        UserStore.email = accountJson.email;
-        UserStore.profilePic = accountJson.profilePic;
+        window.localStorage.setItem('user', accountJson);
         this.setState({loginSuccess:true})
-        console.log(UserStore);
     }
 
     render(){        

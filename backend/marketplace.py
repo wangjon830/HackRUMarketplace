@@ -6,6 +6,7 @@ import json
 import textdistance as td
 from bson import ObjectId
 from bson.json_util import dumps
+import bcrypt
 from pymongo import MongoClient
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -134,7 +135,8 @@ def edit_item():
     db = client['marketplace']
     items = db['items']
     new_item = request.get_json()
-    my_query = {"_id": ObjectId(new_item['_id'])}
+    new_item['_id'] = ObjectId(new_item['_id'])
+    my_query = {"_id": new_item['_id']}
     item = items.find(my_query)
     for x in item:
         items.delete_one(x)
@@ -163,23 +165,26 @@ def add_user():
         if document["email"] == new_user['email']:
             return json.dumps({"success": False, "msg": "An account exists for this email"})
     users.insert_one(new_user)
-    return json.dumps({"success": True, "msg": "Account successfully created", "firstName": document["firstName"], "lastName": document["lastName"], "email": document["email"]})
+    return json.dumps({"success": True, 
+                        "msg": "Account successfully created", 
+                        'user': getUser(document)
+                    })
 
 # Edit User details
 @app.route('/editUser', methods=['POST'])
 def edit_user():
     db = client['marketplace']
     users = db['users']
-    new_user = request.get_json()
-    my_query = {"email": new_user['email']}
-    user = users.find(my_query)
-    password = ''
-    for x in user:
-        password = x['password']
-        users.delete_one(x)
-    new_user['password'] = password
-    users.insert_one(new_user)
-    return "success"
+    updated_user = request.get_json()
+    updated_user['_id'] = ObjectId(updated_user['_id'])
+    users.update_one(
+        { '_id':  updated_user['_id']},
+        {
+            '$set': updated_user,
+        }
+    )
+
+    return json.dumps({"success":True})
 
 # Checks login credentials
 @app.route('/login', methods=['POST'])
@@ -187,12 +192,14 @@ def login():
     db = client['marketplace']
     users = db['users']
     attempt = request.get_json()
-    for document in users.find({}, projection={"_id": False}):
-        if document["email"] == attempt['email']:
-            if document["password"] == attempt['password']:
-                return json.dumps({"success": True, "msg": "Login successful", "firstName": document["firstName"], "lastName": document["lastName"], "email": document["email"]})
-            else:
-                return json.dumps({"success": False, "msg": "Incorrect password"})
+    for document in users.find({'email': attempt['email']}):
+        if bcrypt.checkpw(attempt['password'].encode('utf-8'), document["hashedPassword"].encode('utf-8')):
+            return json.dumps({"success": True, 
+                                "msg": "Login successful", 
+                                'user':getUser(document)
+                            })
+        else:
+            return json.dumps({"success": False, "msg": "Incorrect password"})
     return json.dumps({"success": False, "msg": "No account exists for this email"})
 
 # Get user info
@@ -202,20 +209,28 @@ def getAccount():
     users = db['users']
     new_user = request.get_json()
     for document in users.find({}, projection={"_id": False}):
-        if document["email"] == new_user['email']:
+        if document['email'] == new_user['email']:
             return json.dumps({
-                "success": True,
-                "msg": "Account found",
-                "firstName": document["firstName"],
-                "lastName": document["lastName"],
-                "profilePic": document["profilePic"],
-                "email": document["email"],
-                "phone": document["phone"],
-                "facebook": document["facebook"],
-                "instagram": document["instagram"]
+                'success': True,
+                'msg': 'Account found',
+                'user': getUser(document)
             })
-    return json.dumps({"success": False, "msg": "Account not found"})
+    return json.dumps({'success': False, 'msg': 'Account not found'})
+
+# turn user info into an object
+def getUser(user):
+    return {
+                '_id': str(user['_id']),
+                'firstName': user['firstName'],
+                'lastName': user['lastName'],
+                'profilePic': None if 'profilePic' not in user else user['profilePic'],
+                'email': user['email'],
+                'phone': None if 'phone' not in user else user['phone'],
+                'facebook': None if 'facebook' not in user else user['facebook'],
+                'instagram': None if 'instagram' not in user else user['instagram'],
+                'snapchat': None if 'snapchat' not in user else user['snapchat']
+            }
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()

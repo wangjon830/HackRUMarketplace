@@ -3,21 +3,14 @@ import EditIcon from '@material-ui/icons/Edit';
 import Modal from 'react-modal';
 import {observer} from "mobx-react";
 import {Link} from 'react-router-dom';
-import UserStore from '../stores/UserStore';
 
 class AccountScreen extends React.Component{
     constructor(){
       super();
       this.state={
         modalOpen: false,
-        firstName: UserStore.firstName,
-        lastName: UserStore.lastName,
-        email: UserStore.email,
-        location: '',
-        phone: '',
-        facebook: '',
-        instagram: '',
-        snapchat: ''
+        user: JSON.parse(window.localStorage.getItem('user')),
+        updatedUser: JSON.parse(window.localStorage.getItem('user')) // need state variable to handle input changes in modal
       }
     }
 
@@ -59,16 +52,16 @@ class AccountScreen extends React.Component{
         // }
     };
 
-    setInput(property, val){
-      // if(val.length > 20){
-      //     return;
-      // }
-      this.setState({
-          [property]:val
-      })
+    updateValue(property, val){
+        this.setState(prevState=>{
+            var updatedUser = prevState.updatedUser;
+            updatedUser[property] = val;
+            return {updatedUser};
+        })
     }
 
     async submitChanges(){
+        console.log(JSON.stringify(this.state.updatedUser));
       try{
         let res = await fetch('http://127.0.0.1:5000/editUser', {
             method: 'post',
@@ -76,21 +69,16 @@ class AccountScreen extends React.Component{
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-              firstName: this.state.firstName,
-              lastName: this.state.lastName,
-              email: this.state.email,
-              location: this.state.location,
-              phone: this.state.phone,
-              facebook: this.state.facebook,
-              instagram: this.state.instagram,
-              snapchat: this.state.snapchat
-            })
+            body: JSON.stringify(this.state.updatedUser)
         })
 
         let result = await res.json();
         if(result && result.success){
             alert("Account updated");
+            this.setState(prevState=>({user: prevState.updatedUser}), ()=>{
+                window.localStorage.setItem('user', JSON.stringify(this.state.user));
+            })
+
         }
         else {
             console.log("Could not update account")
@@ -146,15 +134,15 @@ class AccountScreen extends React.Component{
                             id="firstNameInput"
                             type='text' 
                             placeholder="First name" 
-                            value={this.state.firstName}
-                            onChange={(e) => this.setInput("firstName", e.target.value)}
+                            value={this.state.updatedUser.firstName}
+                            onChange={(e) => this.updateValue("firstName", e.target.value)}
                         />
                         <input 
                             id="lastNameInput"
                             type='text' 
                             placeholder="Last name" 
-                            value={this.state.lastName}
-                            onChange={(e) => this.setInput("lastName", e.target.value)}
+                            value={this.state.updatedUser.lastName}
+                            onChange={(e) => this.updateValue("lastName", e.target.value)}
                         />
                     </div>
                     <div style={{display:"flex"}}>
@@ -162,46 +150,46 @@ class AccountScreen extends React.Component{
                           id="emailInput"
                           type='text' 
                           placeholder="Email" 
-                          value={this.state.email}
-                          onChange={(e) => this.setInput("email", e.target.value)}
+                          value={this.state.updatedUser.email}
+                          onChange={(e) => this.updateValue("email", e.target.value)}
                       />
                       <input 
                           id="phoneInput"
                           type='tel' 
                           placeholder="Phone number" 
-                          value={this.state.phone}
-                          onChange={(e) => this.setInput("phone", e.target.value)}
+                          value={this.state.updatedUser.phone}
+                          onChange={(e) => this.updateValue("phone", e.target.value)}
                       />
                       <input 
                           id="locationInput"
                           type='text' 
                           placeholder="Location" 
-                          value={this.state.location}
-                          onChange={(e) => this.setInput("location", e.target.value)}
+                          value={this.state.updatedUser.location}
+                          onChange={(e) => this.updateValue("location", e.target.value)}
                       />
                     </div>
                     
                     <div style={{display:"flex"}}>
                       <input 
                           id="facebookInput"
-                          type='type' 
+                          type='text' 
                           placeholder="Facebook URL" 
-                          value={this.state.facebook}
-                          onChange={(e) => this.setInput("facebook", e.target.value)}
+                          value={this.state.updatedUser.facebook}
+                          onChange={(e) => this.updateValue("facebook", e.target.value)}
                       />
                       <input 
                           id="instagramInput"
-                          type='type' 
+                          type='text' 
                           placeholder="Instagram handle" 
-                          value={this.state.instagram}
-                          onChange={(e) => this.setInput("instagram", e.target.value)}
+                          value={this.state.updatedUser.instagram}
+                          onChange={(e) => this.updateValue("instagram", e.target.value)}
                       />
                       <input 
                           id="snapchatInput"
-                          type='type' 
+                          type='text' 
                           placeholder="Snapchat username" 
-                          value={this.state.snapchat}
-                          onChange={(e) => this.setInput("snapchat", e.target.value)}
+                          value={this.state.updatedUser.snapchat}
+                          onChange={(e) => this.updateValue("snapchat", e.target.value)}
                       />
                     </div>
 
@@ -230,44 +218,50 @@ class AccountScreen extends React.Component{
                   </div>
                   <div style={{marginLeft:"2rem"}}>
                       <h3>Displayed&nbsp;Name</h3>
-                      <p id="username">{this.state.firstName + " " + this.state.lastName}</p>
+                      <p id="username">{this.state.user.firstName + " " + this.state.user.lastName}</p>
                       <br/>
                   </div>
-                  <button id="settingsEditButton" onClick={()=>this.setState({modalOpen: true})}>
+                  <button id="settingsEditButton" onClick={()=>this.setState(prevState=>({updatedUser: prevState.user, modalOpen: true}))}>
                     <EditIcon style={{marginRight: "0.5rem"}}/>Edit&nbsp;info
                   </button>
                 </div>
                 
                 <div className = "settingsItem" style={{marginTop: "1rem"}}>
                     <h3>Location</h3>
-                    <div id="UserLocation">{this.state.location}</div>
+                    <div id="UserLocation">{this.state.user.location}</div>
                     <br/>
                 </div>
                 <div className = "settingsItem">
                     <h3>Phone Number</h3>
-                    <div id="UserPhone">{this.state.phone}</div>
+                    <div id="UserPhone">{this.state.user.phone}</div>
                     <br/>
                 </div>
-                    <h3>Social Links</h3>
-                    <div className="socialLinks">
-                      <div className="settingsItem">
-                        <p>Facebook</p>
-                      <div><a id="Facebook" href={this.state.facebook}>{this.state.facebook}</a></div>
-                    </div>
-                    <div className="socialLinks">
+                <h3>Social Links</h3>
+                <div className="socialLinks">
                     <div className="settingsItem">
-                      <p>Instagram</p>
-                      <div><a id="Instagram" href={this.state.instagram}>{this.state.instagram}</a></div>
-                      </div>
+                        <i className="fab fa-facebook brand-icon" style={{color:"#4267B2"}}/>
+                        <div>
+                            <a id="Facebook" href={this.state.user.facebook}>{this.state.user.facebook}</a>
+                        </div>
                     </div>
-                    <div className="socialLinks">
-                    <div className="settingsItem">
-                      <p>Snapchat Username</p>
-                      <div><p>{this.state.snapchat}</p></div>
-                      </div>
-                    </div>
-                    <br/>
                 </div>
+                <div className="socialLinks">
+                    <div className="settingsItem">
+                        <i className="fab fa-instagram brand-icon" id="instagram"/>
+                        <div>
+                            <a id="Instagram" href={this.state.user.instagram}>{this.state.user.instagram}</a>
+                        </div>
+                    </div>
+                </div>
+                <div className="socialLinks">
+                    <div className="settingsItem">
+                        <i className="fab fa-snapchat-square brand-icon" id="snapchat"/>
+                        <div>
+                            <p>{this.state.user.snapchat}</p>
+                        </div>
+                    </div>
+                </div>
+                <br/>
                 {/* <div className = "settingsItem">
                     <h3>Bio</h3>
                     <p id="UserBio">Hello friend</p>
