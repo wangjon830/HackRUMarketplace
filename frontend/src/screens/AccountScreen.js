@@ -61,33 +61,32 @@ class AccountScreen extends React.Component{
     }
 
     async submitChanges(){
-        console.log(JSON.stringify(this.state.updatedUser));
-      try{
-        let res = await fetch('http://127.0.0.1:5000/editUser', {
-            method: 'post',
-            headers:{
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.updatedUser)
-        })
-
-        let result = await res.json();
-        if(result && result.success){
-            alert("Account updated");
-            this.setState(prevState=>({user: prevState.updatedUser}), ()=>{
-                window.localStorage.setItem('user', JSON.stringify(this.state.user));
+        try{
+            let res = await fetch('http://127.0.0.1:5000/editUser', {
+                method: 'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.state.updatedUser)
             })
 
+            let result = await res.json();
+            if(result && result.success){
+                alert("Account updated");
+                this.setState(prevState=>({user: prevState.updatedUser}), ()=>{
+                    window.localStorage.setItem('user', JSON.stringify(this.state.user));
+                })
+
+            }
+            else {
+                console.log("Could not update account")
+            }
         }
-        else {
-            console.log("Could not update account")
+        catch(e){
+            console.log(e);
+            // this.reset();
         }
-      }
-      catch(e){
-          console.log(e);
-          // this.reset();
-      }
     }
 
     render(){

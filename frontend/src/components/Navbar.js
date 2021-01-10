@@ -45,11 +45,7 @@ class Navbar extends React.Component{
     openSidebar(){
         this.setState({sidebarOpen: true})
         document.querySelector(".sidebar").classList.add("open");
-<<<<<<< HEAD
         document.querySelector(".overlay").style.pointerEvents = 'all';        
-=======
-        
->>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
     }
 
     closeSidebar(){
@@ -76,35 +72,10 @@ class Navbar extends React.Component{
         document.querySelector(".notifications").style.display="none";
     }
 
-<<<<<<< HEAD
     toggleNotifications(){
         if(this.state.notificationsOpen)
             this.closeNotifications()
         else
-=======
-    toggleSidebar(){
-        if(this.state.sidebarOpen)
-            this.closeSidebar()
-        else
-            this.openSidebar()
-    }
-
-    openNotifications(){
-        this.closeDropdown();
-        this.setState({notificationsOpen: true})
-        document.querySelector(".notifications").style.display="block";
-    }
-
-    closeNotifications(){
-        this.setState({notificationsOpen: false})
-        document.querySelector(".notifications").style.display="none";
-    }
-
-    toggleNotifications(){
-        if(this.state.notificationsOpen)
-            this.closeNotifications()
-        else
->>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
             this.openNotifications()
     }
 
@@ -125,7 +96,6 @@ class Navbar extends React.Component{
         else
             this.openDropdown()
     }
-<<<<<<< HEAD
 
     logout(){
         window.localStorage.clear();
@@ -134,9 +104,6 @@ class Navbar extends React.Component{
 
     render(){
         var user = JSON.parse(localStorage.getItem("user"));
-=======
-    render(){
->>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
         return (
             <header>
                 <div className="logo">
@@ -153,7 +120,6 @@ class Navbar extends React.Component{
                     </form>
                 </div>
                 <div className="headerLinks">
-<<<<<<< HEAD
                     {user ? 
                     <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
                         <Link to="/makeListing"><div className="headerButton"><AddIcon style={{marginRight:"0.2rem"}}/>New&nbsp;Listing</div></Link>
@@ -161,15 +127,6 @@ class Navbar extends React.Component{
                         <div style={{position:"relative"}}>
                             <button className="dropdownButton" onClick={()=>this.toggleNotifications()}>
                                 <NotificationsIcon style={{float:"left"}}/>
-=======
-                    {UserStore.loggedIn && <Link to="/makeListing"><div className="headerButton"><AddIcon style={{marginRight:"0.2rem"}}/>New&nbsp;Listing</div></Link>}
-                    {UserStore.loggedIn && <Link to="/watchlist"><div className="headerButton"><VisibilityIcon style={{marginRight:"0.2rem"}}/>Watchlist</div></Link>}
-                    {UserStore.loggedIn &&  
-                        <div style={{position:"relative"}}>
-                            <button className="dropdownButton" style={{marginLeft: "1rem"}} onClick={()=>this.toggleNotifications()}>
-                                <NotificationsIcon style={{float:"left"}}/>
-                                {this.state.notificationsOpen ? <ArrowDropUpIcon/> : <ArrowDropDownIcon/>}
->>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
                             </button> 
                             <div className="notifications">
                                 <div className="arrowUp"/>
@@ -203,39 +160,21 @@ class Navbar extends React.Component{
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                         <div style={{position:"relative"}}>
                             <button className="dropdownButton" onClick={()=>this.toggleDropdown()}>
                                 <img className="profileThumbnail" src="/images/profile.jpg" alt="Profile Picture"/>
-=======
-                    }
-                    {UserStore.loggedIn ? 
-                        <div style={{position:"relative"}}>
-                            <button className="dropdownButton" onClick={()=>this.toggleDropdown()}>
-                                <img className="profileThumbnail" src="/images/profile.jpg" alt="Profile Picture"/>
-                                {this.state.dropdownOpen ? <ArrowDropUpIcon/> : <ArrowDropDownIcon/>}
->>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
                             </button>
                             <div className="dropdown">
                                 <div className="arrowUp"/>
                                 <div className="dropdownHeader">
                                     <img className="dropdownProfilePic" src="/images/profile.jpg" alt="Profile Picture"/>
                                     <div style={{display: "flex", flexDirection:"column", justifyContent:"center", marginLeft:"0.5rem"}}>
-<<<<<<< HEAD
                                         <p id="dropdownName">{user.firstName + " " + user.lastName}</p>
                                         <p id="dropdownEmail">{user.email}</p>
                                     </div>
                                 </div>
                                 <div className="dropdownButtons">
                                     <Link to="/settings/account" onClick={()=>{this.closeDropdown()}}>
-=======
-                                        <p id="dropdownName">{UserStore.firstName + " " + UserStore.lastName}</p>
-                                        <p id="dropdownEmail">{UserStore.email}</p>
-                                    </div>
-                                </div>
-                                <div className="dropdownButtons">
-                                    <Link to="/settings/account">
->>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
                                         <button>
                                             <SettingsIcon className="dropdownIcon"/>Account settings
                                         </button>
@@ -253,17 +192,12 @@ class Navbar extends React.Component{
                                             <ChatBubbleIcon className="dropdownIcon"/>Send feedback
                                         </button>
                                     </Link>
-<<<<<<< HEAD
                                     <button onClick={()=>{this.logout()}}>
-=======
-                                    <button onClick={this.logout}>
->>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
                                         <ExitToAppIcon className="dropdownIcon"/>Sign out
                                     </button>
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
                     </div>:
                     <Link to="/login">
                         <div className="headerButton">
@@ -272,10 +206,6 @@ class Navbar extends React.Component{
                     </Link>}
                 </div>
                 <div className="overlay" onClick={()=>this.closeSidebar()}/>
-=======
-                    : <Link to="/login"><div className="headerButton"><ExitToAppIcon style={{marginRight:"0.2rem"}}/>Sign&nbsp;In</div></Link>}
-                </div>
->>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
                 <aside className="sidebar">
                     <div className="sidebarHead">
                         <h1 style={{padding:"2rem 1rem 0rem 1rem"}}>Shopping Categories<hr/></h1>
