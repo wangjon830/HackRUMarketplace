@@ -29,18 +29,18 @@
   color: black;
   background-color: white;
 }
-.navItem settingActive {
+.navItem SettingActive {
   position: relative;
   padding: 12px 3px 12px 3px;
   background-color: #d34f4f;
   background-clip: padding-box;
 }
-.navItem settingStatus {
+.navItem SettingStatus {
   position: relative;
   padding: 12px 3px 12px 3px;
   background-clip: padding-box;
 }
-.navItem:hover settingStatus {
+.navItem:hover SettingStatus {
   background-color: #d34f4f;
 }
 .sidenav .navItem:hover {
@@ -146,8 +146,13 @@
   border-radius: 5px;
 }
 
-#settingsErrorMessage {
+#settingsMessageDisplay {
   display: none;
+  background-color: #ff3d3d;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  color: white;
+  margin-top: 1rem;
 }
 
 #settingsModalBody input {

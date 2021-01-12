@@ -1,56 +1,75 @@
 import React from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import Modal from 'react-modal';
-import {observer} from "mobx-react";
 import {Link} from 'react-router-dom';
+
+import Login from '../web/Login';
+
+var tempUser = {
+    firstName: "",
+    lastName: "", 
+    imageUrl: "",
+    profilePic: "",
+    email: "",
+    phone: "",
+    facebook: "",
+    instagram: "",
+    snapchat: ""
+}
 
 class AccountScreen extends React.Component{
     constructor(){
       super();
       this.state={
         modalOpen: false,
-        user: JSON.parse(window.localStorage.getItem('user')),
-        updatedUser: JSON.parse(window.localStorage.getItem('user')) // need state variable to handle input changes in modal
+        user: JSON.parse(JSON.stringify(tempUser)),
+        updatedUser: JSON.parse(JSON.stringify(tempUser)), // need state variable to handle input changes in modal
+        displayMessage: ""
       }
     }
 
     async componentDidMount(){
-        // try{
-        //   let res = await fetch('http://127.0.0.1:5000/getAccount', {
-        //       method: 'get',
-        //       headers:{
-        //           'Accept': 'application/json',
-        //           'Content-Type': 'application/json'
-        //       },
-        //       body: JSON.stringify({
-        //           email: UserStore.email
-        //       })
-        //   })
+        var user = JSON.parse(window.localStorage.getItem('user'))
+        if(!user)
+            this.props.history.push('/')
 
-        //   let result = await res.json();
+        Modal.setAppElement('body');
 
-        //   if(result && result.success){
-        //       this.setState({
-        //         firstName: result.firstName,
-        //         lastName: result.lastName,
-        //         email: result.email,
-        //         location: result.location,
-        //         phone: result.phone,
-        //         facebook: result.facebook,
-        //         instagram: result.instagram,
-        //         snapchat: result.snapchat
-        //       });
-        //   }
-        //   else{
-        //       console.log("Could not get account info")
-        //       return;
-        //   }
-        // }
-        // catch(e){
-        //     console.log(e);
-        //     return;
-        // }
+        try{
+            await fetch('http://127.0.0.1:5000/getAccount', {
+                method: 'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    _id: user._id
+                })
+            })
+            .then(response=>response.json())
+            .then(data => {
+                if(data && data.success){
+                    this.setState({user: data.user});
+                }
+                else{
+                    console.log("Could not get account info")
+                    return;
+                }
+            })
+        }
+        catch(e){
+            console.log(e);
+            return;
+        }
     };
+
+    resetModal(){
+        this.setState(prevState=>({
+            updatedUser: JSON.parse(JSON.stringify(prevState.user)),
+            displayMessage: ""
+        }));
+        // document.getElementById("settingsErrorMessage").style.display="none";
+    }
 
     updateValue(property, val){
         this.setState(prevState=>{
@@ -61,32 +80,67 @@ class AccountScreen extends React.Component{
     }
 
     async submitChanges(){
+        var user = JSON.parse(window.localStorage.getItem('user'))
+
+        // check if access token expired and refresh if not
+        await Login.checkAccess(user)
+        .then(response => {
+            if(!response)
+                this.props.history.push('/')
+        })
+
         try{
-            let res = await fetch('http://127.0.0.1:5000/editUser', {
+            await fetch('http://127.0.0.1:5000/editUser', {
                 method: 'post',
                 headers:{
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(this.state.updatedUser)
-            })
-
-            let result = await res.json();
-            if(result && result.success){
-                alert("Account updated");
-                this.setState(prevState=>({user: prevState.updatedUser}), ()=>{
-                    window.localStorage.setItem('user', JSON.stringify(this.state.user));
+                body: JSON.stringify({
+                    _id: user._id,
+                    user: this.state.updatedUser, 
+                    refresh_token: Login.getRefreshToken(),
+                    access_token: Login.getAccessToken()
                 })
-
-            }
-            else {
-                console.log("Could not update account")
-            }
+            })
+            .then(response => response.json())
+            .then(async (data) => {
+                if(data && data.success){
+                    this.setMessage("Account updated", '#00c903');
+                    this.setState(prevState=>({user: prevState.updatedUser}), ()=>{
+                        var basicInfo = {
+                            _id: this.state.user._id,
+                            firstName: this.state.user.firstName,
+                            lastName: this.state.user.lastName,
+                            imageUrl: this.state.user.imageUrl,
+                            profilePic: this.state.user.profilePic,
+                            email: this.state.user.email,
+                        }
+                        window.localStorage.setItem('user', JSON.stringify(basicInfo));
+                    })
+    
+                }
+                // try to submit changes again with new access token provided by server
+                else if(data.access_token){
+                    Login.setAccessToken(data.access_token)
+                    await this.submitChanges()
+                    return;
+                }
+                else {
+                    this.setMessage(data.msg, '#ff3d3d');
+                }
+            })            
         }
         catch(e){
             console.log(e);
             // this.reset();
         }
+    }
+
+    setMessage(message, color){
+        this.setState({displayMessage: message})
+        document.getElementById("settingsMessageDisplay").style.backgroundColor = color;
+        document.getElementById("settingsMessageDisplay").style.display = "block";
     }
 
     render(){
@@ -127,7 +181,11 @@ class AccountScreen extends React.Component{
                 </div>
 
                 <div className="modalBody" id="settingsModalBody">
-                    <img className="profilePic" style={{marginBottom:"1rem"}} src="/images/profile.jpg" alt="Profile Picture"/>
+                    <img className="profilePic" 
+                        style={{marginBottom:"1rem"}} 
+                        src={this.state.user.imageUrl ? this.state.user.imageUrl : "/images/profile.jpg"} 
+                        alt="Profile Picture"
+                    />
                     <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", padding: "0 2rem"}}>
                         <input 
                             id="firstNameInput"
@@ -198,12 +256,12 @@ class AccountScreen extends React.Component{
                     >
                         Submit
                     </button>  
-                    <div id="settingsErrorMessage">{this.state.settingsErrorMessage}</div>
+                    <div id="settingsMessageDisplay">{this.state.displayMessage}</div>
                 </div>
             </Modal>
             <div id="AccountOptions" className = "sidenav">
                 <Link to="/settings/account"><div className="navItem"><settingActive/>&nbsp;&nbsp;Personal&nbsp;Information</div></Link>
-                <Link to="/settings/security"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Login&nbsp;&&nbsp;Security</div></Link>
+                <Link to="/settings/security"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Security</div></Link>
                 <Link to="/settings/transaction"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your&nbsp;Transactions</div></Link>
                 <Link to="/settings/listings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your&nbsp;Listings</div></Link>
             </div>
@@ -212,15 +270,23 @@ class AccountScreen extends React.Component{
                 <div style={{display: "flex"}}>
                   <div className="profilePictureContainer">
                       <h3>Profile&nbsp;Picture</h3>
-                      <img className="profilePic" src="/images/profile.jpg" alt="Profile Picture"/>
+                      <img className="profilePic" 
+                            src={this.state.user.imageUrl ? this.state.user.imageUrl : "/images/profile.jpg"} 
+                            alt="Profile Picture"/>
                       <br/>
                   </div>
                   <div style={{marginLeft:"2rem"}}>
                       <h3>Displayed&nbsp;Name</h3>
                       <p id="username">{this.state.user.firstName + " " + this.state.user.lastName}</p>
                       <br/>
+                      <h3>Email</h3>
+                      <p id="email">{this.state.user.email}</p>
+                      <br/>
                   </div>
-                  <button id="settingsEditButton" onClick={()=>this.setState(prevState=>({updatedUser: prevState.user, modalOpen: true}))}>
+                  <button id="settingsEditButton" onClick={()=>{
+                      this.resetModal();
+                      this.setState({modalOpen: true})
+                  }}>
                     <EditIcon style={{marginRight: "0.5rem"}}/>Edit&nbsp;info
                   </button>
                 </div>
@@ -272,4 +338,4 @@ class AccountScreen extends React.Component{
     }
 }
 
-export default observer(AccountScreen);
+export default AccountScreen;

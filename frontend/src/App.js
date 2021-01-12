@@ -32,7 +32,7 @@ const App = () => {
         <div className="App">
             <Navbar/>
             <main>
-            <Route path="/" exact={true} component={HomeScreen}/>
+                <Route path="/" exact={true} component={HomeScreen}/>
                 <Route path="/listings/:id" component={ItemScreen}/>
                 <Route path="/login" component={LoginScreen}/>
                 <Route path="/settings/account" exact={true} component={AccountScreen}/>

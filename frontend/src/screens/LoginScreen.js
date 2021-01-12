@@ -1,8 +1,10 @@
 import React from 'react';
 import {Redirect } from 'react-router-dom';
 import Modal from 'react-modal';
-import UserStore from '../stores/UserStore';
-var bcrypt = require('bcryptjs');
+import FacebookLogin from 'react-facebook-login'
+import GoogleLogin from 'react-google-login';
+
+import Login from '../web/Login';
 
 class LoginScreen extends React.Component{
     constructor(props){
@@ -22,6 +24,11 @@ class LoginScreen extends React.Component{
     }
 
     componentDidMount(){
+        // redirect to homepage if already logged in
+        var user = JSON.parse(localStorage.getItem("user"));
+        if(user)
+            this.props.history.push('/')
+
         this.reset();
     }
 
@@ -73,35 +80,13 @@ class LoginScreen extends React.Component{
             buttonDisabled: true
         })
 
-        try{
-            let res = await fetch('http://127.0.0.1:5000/login', {
-                method: 'post',
-                headers:{
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: this.state.email,
-                    password: this.state.password
-                })
-            })
-
-            let result = await res.json();
-            if(result && result.success){
-                // values must be saved as string in LocalStorage
-                this.saveAccountInfo(JSON.stringify(result.user));
-            }
-            else if(result && !result.success){
-                this.badLogin(result.msg);
-            }
-            else{
-                this.badLogin("Could not login")
-            }
-        }
-        catch(e){
-            console.log(e);
-            // this.reset();
-        }
+        await Login.login(this.state.email, this.state.password)
+        .then(response=>{
+            if(!response.success)
+                this.badLogin(response.message)
+            else
+                this.setState({loginSuccess:true})
+        })
     }
 
     async doRegister(){
@@ -120,47 +105,47 @@ class LoginScreen extends React.Component{
             return;
         }
 
-        let hashedPassword = await bcrypt.hash(password, 10)
-
-        try{
-            let res = await fetch('http://127.0.0.1:5000/register', {
-                method: 'post',
-                headers:{
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    firstName,
-                    lastName,
-                    email,
-                    hashedPassword
-                })
-            })
-
-            let result = await res.json();
-
-            if(result && result.success){
-                this.saveAccountInfo(result);
-            }
-            else if(result && !result.success){
-                this.setModalError("An account already exists for this email");
-                return;
-            }
-            else{
-                this.setModalError("Account could not be created");
-                return;
-            }
-        }
-        catch(e){
-            console.log(e);
-            this.reset();
-            return;
-        }
+        var account = {firstName, lastName, email, password}
+        await Login.register(account)
+        .then(response=>{
+            if(!response.success)
+                this.setModalError(response.message);
+            else
+                this.setState({loginSuccess:true})
+        })
     }
 
-    saveAccountInfo(accountJson){
-        window.localStorage.setItem('user', accountJson);
-        this.setState({loginSuccess:true})
+    responseFacebook(response){
+        var name = response.name.split(" ");
+        var user = {
+            firstName: name[0],
+            lastName: name[name.length - 1],
+            email: response.email,
+            imageUrl: response.picture.data.url,
+            facebookId: response.id
+        }
+        this.authenticateUser(user)      
+    }
+
+    responseGoogle(response){
+        var user = {
+            firstName: response.profileObj.givenName,
+            lastName: response.profileObj.familyName,
+            email: response.profileObj.email,
+            imageUrl: response.profileObj.imageUrl,
+            googleId: response.profileObj.googleId
+        }
+        this.authenticateUser(user)      
+    }
+
+    async authenticateUser(user){
+        await Login.authenticateUser(user)
+        .then(response=>{
+            if(!response.success)
+                this.badLogin(response.message)
+            else
+                this.setState({loginSuccess:true})
+        })
     }
 
     render(){        
@@ -264,6 +249,24 @@ class LoginScreen extends React.Component{
                         >
                             Continue
                         </button>
+                    </div>
+
+                    <div className="oauthSection">
+                        <FacebookLogin
+                            appId="2895624537377016"
+                            fields="name,email,picture"
+                            callback={(res)=>this.responseFacebook(res)} 
+                            cssClass="btnFacebook"
+                            icon={<i className="fa fa-facebook" style={{marginRight:'1rem'}}></i>}
+                        />
+                        <GoogleLogin
+                            clientId="260001781758-o133qkucia4e05p2nrru5mb95fo1ubt3.apps.googleusercontent.com"
+                            buttonText="Login with Google"
+                            onSuccess={(res)=>this.responseGoogle(res)}
+                            onFailure={(res)=>this.responseGoogle(res)}
+                            cookiePolicy={'single_host_origin'}
+                            className="btnGoogle"
+                        />
                     </div>
 
                     <p style={{marginTop: "1rem"}}>New user?</p>

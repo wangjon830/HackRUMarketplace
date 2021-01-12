@@ -58,6 +58,30 @@
   background-color: #22a1f5;
 }
 
+.oauthSection {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+
+.btnFacebook,
+.btnGoogle {
+  width: 12rem;
+  height: 2.75rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+}
+
+.btnFacebook {
+  background-color: #4267b2;
+  color: white;
+}
+
 #registerButton {
   background-color: #22e305;
 }

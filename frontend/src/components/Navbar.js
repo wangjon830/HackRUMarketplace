@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link, withRouter} from 'react-router-dom';
+
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SearchIcon from '@material-ui/icons/Search';
@@ -7,16 +8,13 @@ import HomeIcon from '@material-ui/icons/Home';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@material-ui/icons/Add';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Brightness6Icon from '@material-ui/icons/Brightness6';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
-import {observer} from "mobx-react";
-import UserStore from '../stores/UserStore';
 
-var results;
+import Login from '../web/Login';
+
 class Navbar extends React.Component{
     constructor(){
         super();
@@ -35,7 +33,7 @@ class Navbar extends React.Component{
     componentDidUpdate(prevProps) {
         if (this.props.location.pathname !== prevProps.location.pathname) {
             this.closeSidebar();
-            if(UserStore.loggedIn){
+            if(localStorage.getItem("user")){
                 this.closeNotifications();
                 this.closeDropdown();
             }
@@ -98,8 +96,8 @@ class Navbar extends React.Component{
     }
 
     logout(){
-        window.localStorage.clear();
-        this.setState(prevState=>prevState);
+        Login.clearAccountInfo();
+        this.props.history.push('/')
     }
 
     render(){
@@ -162,12 +160,12 @@ class Navbar extends React.Component{
                         </div>
                         <div style={{position:"relative"}}>
                             <button className="dropdownButton" onClick={()=>this.toggleDropdown()}>
-                                <img className="profileThumbnail" src="/images/profile.jpg" alt="Profile Picture"/>
+                                <img className="profileThumbnail" src={user.imageUrl ? user.imageUrl : "/images/profile.jpg"}  alt="Profile Picture"/>
                             </button>
                             <div className="dropdown">
                                 <div className="arrowUp"/>
                                 <div className="dropdownHeader">
-                                    <img className="dropdownProfilePic" src="/images/profile.jpg" alt="Profile Picture"/>
+                                    <img className="dropdownProfilePic" src={user.imageUrl ? user.imageUrl : "/images/profile.jpg"}  alt="Profile Picture"/>
                                     <div style={{display: "flex", flexDirection:"column", justifyContent:"center", marginLeft:"0.5rem"}}>
                                         <p id="dropdownName">{user.firstName + " " + user.lastName}</p>
                                         <p id="dropdownEmail">{user.email}</p>
@@ -254,4 +252,4 @@ class Navbar extends React.Component{
     }
 }
 
-export default observer(withRouter(Navbar));
+export default withRouter(Navbar);
