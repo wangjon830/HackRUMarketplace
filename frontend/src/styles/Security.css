@@ -1,0 +1,96 @@
+#securityScreen h3 {
+  margin: 0;
+}
+
+#securityScreen .settingsItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  padding-left: 3rem;
+}
+
+#securityScreen .settingsItemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#securityScreen .submitButton {
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.editButton {
+  background: none;
+  outline: none;
+  border: none;
+  color: #1b7ae7;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.accordion {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.accordionContent {
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#securityScreen hr {
+  width: 80%;
+  margin-bottom: 2rem;
+}
+
+.emailInput {
+  outline: none;
+  box-sizing: border-box;
+}
+
+#passwordAccordion {
+  width: 70%;
+}
+
+#passwordAccordian div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.accountInput {
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+#securityScreen .messageDisplay {
+  display: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+}

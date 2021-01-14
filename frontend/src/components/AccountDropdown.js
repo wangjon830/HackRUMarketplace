@@ -1,61 +1,66 @@
-import React,{useState} from 'react';
-import {Link, withRouter} from 'react-router-dom';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import React from 'react';
+import {Link} from 'react-router-dom';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Brightness6Icon from '@material-ui/icons/Brightness6';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import {observer} from "mobx-react";
-import UserStore from '../stores/UserStore';
+
+import User from '../web/User';
+
+import '../styles/AccountDropdown.css';
 
 class AccountDropdown extends React.Component {
     constructor(props){
         super(props)
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.location.pathname !== prevProps.location.pathname) {
-            this.props.closeDropdown();
+        this.state={
+            dropdownOpen:false
         }
     }
 
+    openDropdown (){
+        this.props.closeNotifications();
+        this.setState({dropdownOpen:true})
+        document.querySelector(".dropdown").style.display="block";
+    }
+
+    closeDropdown(){
+        this.setState({dropdownOpen: false})
+        document.querySelector(".dropdown").style.display="none";
+    }
+
     toggleDropdown(){
-        if(this.props.dropdownOpen)
-            this.props.closeDropdown()
+        if(this.state.dropdownOpen)
+            this.closeDropdown();
         else
-            this.props.openDropdown()
+            this.openDropdown();
     }
 
     logout(){
-        this.props.closeDropdown();
-        UserStore.loggedIn = false;
-        UserStore.firstName = "";
-        UserStore.lastName = "";
-        UserStore.email = "";
-        UserStore.profilePic = null;
-        // history.go(0);
+        this.closeDropdown();
+        this.props.closeNotifications();
+        User.clearAccountInfo();
+        this.props.redirect();
     }
 
     render(){
+        var user = JSON.parse(window.localStorage.getItem('user'))
         return (
             <div style={{position:"relative"}}>
                 <button className="dropdownButton" onClick={()=>this.toggleDropdown()}>
-                    <img className="profileThumbnail" src="/images/profile.jpg" alt="Profile Picture"/>
-                    {this.props.dropdownOpen ? <ArrowDropUpIcon/> : <ArrowDropDownIcon/>}
+                    <img className="profileThumbnail" src={user.imageUrl ? user.imageUrl : "/images/profile.jpg"}  alt="Profile"/>
                 </button>
                 <div className="dropdown">
                     <div className="arrowUp"/>
                     <div className="dropdownHeader">
-                        <img className="dropdownProfilePic" src="/images/profile.jpg" alt="Profile Picture"/>
+                        <img className="dropdownProfilePic" src={user.imageUrl ? user.imageUrl : "/images/profile.jpg"}  alt="Profile"/>
                         <div style={{display: "flex", flexDirection:"column", justifyContent:"center", marginLeft:"0.5rem"}}>
-                            <p id="dropdownName">{UserStore.firstName + " " + UserStore.lastName}</p>
-                            <p id="dropdownEmail">{UserStore.email}</p>
+                            <p id="dropdownName">{user.firstName + " " + user.lastName}</p>
+                            <p id="dropdownEmail">{user.email}</p>
                         </div>
                     </div>
                     <div className="dropdownButtons">
-                        <Link to="/settings/account">
+                        <Link to="/settings/account" onClick={()=>{this.closeDropdown()}}>
                             <button>
                                 <SettingsIcon className="dropdownIcon"/>Account settings
                             </button>
@@ -73,7 +78,7 @@ class AccountDropdown extends React.Component {
                                 <ChatBubbleIcon className="dropdownIcon"/>Send feedback
                             </button>
                         </Link>
-                        <button onClick={this.logout}>
+                        <button onClick={()=>{this.logout()}}>
                             <ExitToAppIcon className="dropdownIcon"/>Sign out
                         </button>
                     </div>
@@ -84,4 +89,4 @@ class AccountDropdown extends React.Component {
    
 }
 
-export default observer(withRouter(AccountDropdown));
+export default AccountDropdown;

@@ -1,5 +1,4 @@
 import React,{useState} from 'react';
-import AccountSidebar from "../components/AccountSidebar";
 import {Link} from 'react-router-dom';
 import data from '../data';
 

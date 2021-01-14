@@ -7,6 +7,7 @@ import dorm from "../images/dorm.jpeg";
 import nicedorm from "../images/nicedorm.jpg";
 import kitchen from "../images/kitchen.jpg";
 
+import '../styles/HomeScreen.css';
 
 function HomeScreen(props){
     return <div className="homeContainer">
@@ -88,8 +89,8 @@ function HomeScreen(props){
         <div className="homeCategory" id="homeAppliances">
             <div className="homeHeader">Appliances<hr/></div>
             <ul className="products">
-                {data.products.map(product=>
-                <li>
+                {data.products.map((product, i)=>
+                <li key={"applicances" + i}>
                     <div className="product">
                         <Link to={"/products/"+product._id}>
                             <img className="product-image" src={product.images[0]} alt="product"/>
@@ -128,8 +129,8 @@ function HomeScreen(props){
         <div className="homeCategory" id="homeElectronics">
             <div className="homeHeader">Electronics<hr/></div>
             <ul className="products">
-                {data.products.map(product=>
-                <li>
+                {data.products.map((product, i)=>
+                <li key={"electronics" + i}>
                     <div className="product">
                         <Link to={"/products/"+product._id}>
                             <img className="product-image" src={product.images[0]} alt="product"/>

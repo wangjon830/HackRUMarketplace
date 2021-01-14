@@ -1,89 +1,88 @@
-import React,{useEffect, useState} from 'react';
+import React from 'react';
 import {Link} from 'react-router-dom';
+
+import User from '../web/User';
+import Item from '../web/Item';
 
 class ItemScreen extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            itemName: '',
-            poster: '',
-            description: '',
-            price: '',
-            trade: '',
-            categories: [],
-            condition: '',
-            images: [],
+            item: null,
+            inWatchlist: false,
             currentImage: 0
         }
-        this.setItem = this.setItem.bind(this);
-    }
-
-    setItem(itemJson){
-        this.setState({
-            title: itemJson.title,
-            poster: itemJson.poster,
-            description: itemJson.description,
-            price: itemJson.price,
-            trade: itemJson.trade,
-            categories: itemJson.categories,
-            condition: itemJson.condition,
-            images: itemJson.images,
-        })
     }
 
     async componentDidMount(){
-        var request = new XMLHttpRequest();
-        request.open("GET", "http://127.0.0.1:5000/getItem?id=" + this.props.match.params.id);
-        request.onload = () =>this.setItem(JSON.parse(request.response));
-        request.send();
-        console.log(request.response);
+        let query = this.props.location.search;
+        var item = (await Item.getItem(query)).item;
+        var inWatchlist = await User.isInWatchlist(item._id);
+        this.setState({item, inWatchlist})
     }
 
     changeImage(change){
         var newImage = this.state.currentImage + change;
-        if(newImage >= this.state.images.length)
+        if(newImage >= this.state.item.images.length)
             newImage = 0;
         else if (newImage < 0)
-            newImage = this.state.images.length - 1;
+            newImage = this.state.item.images.length - 1;
         this.setState({currentImage: newImage})
     }
 
     render(){
         return (
             <div style={{flex: "1 1"}}>
+                {this.state.item && 
                 <div className="itemContainer">
                     <div className="itemImages">
                         <div className="imageView">
-                            <img src={this.state.images[this.state.currentImage]} alt="item"/>
-                            <button className="imageArrowBtn" onClick={() => this.changeImage(-1)}>&lt;</button>
-                            <button className="imageArrowBtn" onClick={() => this.changeImage(1)}>&gt;</button>
+                            <img src={this.state.item.images[this.state.currentImage]} alt="item"/>
+                            {this.state.item.images.length > 1 &&
+                                <>
+                                    <button className="imageArrowBtn" onClick={() => this.changeImage(-1)}>&lt;</button>
+                                    <button className="imageArrowBtn" onClick={() => this.changeImage(1)}>&gt;</button>
+                                </>
+                            }
                         </div>
-                        <div className="image-gallery">
-                            <button className="gallery-arrow-btn" onClick={() => this.changeImage(-1)}>&lt;</button>
-                            <button className="gallery-arrow-btn" onClick={() => this.changeImage(1)}>&gt;</button>
-                            {this.state.images.map((image, i)=>
-                                <img src={image} style={{border: this.state.currentImage == i ? "2px solid red" : "none"}}/>)}
-                        </div>
+                        {this.state.item.images.length > 1 &&
+                            <div className="image-gallery">
+                                <button className="gallery-arrow-btn" onClick={() => this.changeImage(-1)}>&lt;</button>
+                                <button className="gallery-arrow-btn" onClick={() => this.changeImage(1)}>&gt;</button>
+                                {this.state.images.map((image, i)=>
+                                    <img src={image} style={{border: this.state.currentImage == i ? "2px solid red" : "none"}}/>)}
+                            </div>
+                        }
                     </div>
                     <div className="listing-details">
                         <div className="listing-header">
-                            <h2 className="listing-name">{this.state.title}</h2>
-                            <p>Seller: <Link to="/">{this.state.poster}</Link></p>
+                            <h2 className="listing-name">{this.state.item.title}</h2>
+                            <p>Seller: <Link to="/">{this.state.item.poster}</Link></p>
                         </div>
                         <div className="listing-info">
-                            <p>Condition: {this.state.condition}</p>
+                            <p>Condition: {this.state.item.condition}</p>
                         </div>
                         <div className="details-action">
                             <div className="details-action-text">
-                                <p>Ask price: <b>${this.state.price}</b></p>
+                                <p>Ask price: <b>${this.state.item.price}</b></p>
                             </div>
                             <div className="details-action-buttons">
-                                <button id="watchlist-button">Add to watchlist</button>
+                                {this.state.inWatchlist ? 
+                                    <button id="watchlist-button" onClick={()=>{
+                                        User.removeFromWatchlist(this.state.item._id)
+                                        .then(()=>this.setState({inWatchlist: false}))
+                                    }}>Remove from watchlist</button>:
+                                    <button id="watchlist-button" onClick={()=>{
+                                        User.addToWatchlist(this.state.item._id)
+                                        .then(()=>this.setState({inWatchlist: true}))
+                                    }}>Add to watchlist</button>
+                                }
                                 <button id="contact-button">Contact seller</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                }
             </div>
         )
     }

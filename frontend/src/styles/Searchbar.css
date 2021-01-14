@@ -1,0 +1,30 @@
+.searchBar {
+  float: left;
+  padding: 6px 10px;
+  margin-left: 16px;
+  font-size: 17px;
+  border: none;
+  cursor: text;
+  height: 100%;
+  width: 70%;
+  outline: none;
+}
+
+.searchButton {
+  float: left;
+  border: none;
+  outline: none;
+  height: 100%;
+  width: auto;
+  max-width: 10%;
+  padding: 2.5px;
+  color: white;
+  background-color: red;
+  cursor: pointer;
+}
+
+.searchSection {
+  margin-left: auto;
+  width: 40%;
+  min-width: 50vw;
+}

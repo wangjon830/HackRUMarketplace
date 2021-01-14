@@ -1,9 +1,11 @@
 import React from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import Modal from 'react-modal';
-import {Link} from 'react-router-dom';
 
-import Login from '../web/Login';
+import User from '../web/User';
+import SettingsNavigation from '../components/SettingsNavigation';
+
+import '../styles/Account.css';
 
 var tempUser = {
     firstName: "",
@@ -80,61 +82,17 @@ class AccountScreen extends React.Component{
     }
 
     async submitChanges(){
-        var user = JSON.parse(window.localStorage.getItem('user'))
-
-        // check if access token expired and refresh if not
-        await Login.checkAccess(user)
-        .then(response => {
-            if(!response)
+        await User.editUser(this.state.updatedUser)
+        .then(response=>{
+            if(response.success){
+                this.setMessage("Account updated", '#00c903');
+                this.setState(prevState=>({user: prevState.updatedUser}))
+            }
+            else if(response.message === "Tokens invalid")
                 this.props.history.push('/')
+            else
+                this.setMessage(response.message, '#ff3d3d');
         })
-
-        try{
-            await fetch('http://127.0.0.1:5000/editUser', {
-                method: 'post',
-                headers:{
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    _id: user._id,
-                    user: this.state.updatedUser, 
-                    refresh_token: Login.getRefreshToken(),
-                    access_token: Login.getAccessToken()
-                })
-            })
-            .then(response => response.json())
-            .then(async (data) => {
-                if(data && data.success){
-                    this.setMessage("Account updated", '#00c903');
-                    this.setState(prevState=>({user: prevState.updatedUser}), ()=>{
-                        var basicInfo = {
-                            _id: this.state.user._id,
-                            firstName: this.state.user.firstName,
-                            lastName: this.state.user.lastName,
-                            imageUrl: this.state.user.imageUrl,
-                            profilePic: this.state.user.profilePic,
-                            email: this.state.user.email,
-                        }
-                        window.localStorage.setItem('user', JSON.stringify(basicInfo));
-                    })
-    
-                }
-                // try to submit changes again with new access token provided by server
-                else if(data.access_token){
-                    Login.setAccessToken(data.access_token)
-                    await this.submitChanges()
-                    return;
-                }
-                else {
-                    this.setMessage(data.msg, '#ff3d3d');
-                }
-            })            
-        }
-        catch(e){
-            console.log(e);
-            // this.reset();
-        }
     }
 
     setMessage(message, color){
@@ -145,7 +103,7 @@ class AccountScreen extends React.Component{
 
     render(){
       return( 
-        <div>
+        <div id="accountScreen">
             <Modal
                 isOpen={this.state.modalOpen}
                 closeTimeoutMS={500}
@@ -184,7 +142,7 @@ class AccountScreen extends React.Component{
                     <img className="profilePic" 
                         style={{marginBottom:"1rem"}} 
                         src={this.state.user.imageUrl ? this.state.user.imageUrl : "/images/profile.jpg"} 
-                        alt="Profile Picture"
+                        alt="Profile"
                     />
                     <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between", alignItems:"center", padding: "0 2rem"}}>
                         <input 
@@ -203,13 +161,6 @@ class AccountScreen extends React.Component{
                         />
                     </div>
                     <div style={{display:"flex"}}>
-                      <input 
-                          id="emailInput"
-                          type='text' 
-                          placeholder="Email" 
-                          value={this.state.updatedUser.email}
-                          onChange={(e) => this.updateValue("email", e.target.value)}
-                      />
                       <input 
                           id="phoneInput"
                           type='tel' 
@@ -259,12 +210,7 @@ class AccountScreen extends React.Component{
                     <div id="settingsMessageDisplay">{this.state.displayMessage}</div>
                 </div>
             </Modal>
-            <div id="AccountOptions" className = "sidenav">
-                <Link to="/settings/account"><div className="navItem"><settingActive/>&nbsp;&nbsp;Personal&nbsp;Information</div></Link>
-                <Link to="/settings/security"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Security</div></Link>
-                <Link to="/settings/transaction"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your&nbsp;Transactions</div></Link>
-                <Link to="/settings/listings"><div className="navItem"><settingStatus/>&nbsp;&nbsp;Your&nbsp;Listings</div></Link>
-            </div>
+            <SettingsNavigation pathname={this.props.location.pathname}/>
             <div className = "settings">
                 <div className = "headText"><h1>Personal&nbsp;Information<hr/></h1></div>
                 <div style={{display: "flex"}}>
@@ -272,7 +218,7 @@ class AccountScreen extends React.Component{
                       <h3>Profile&nbsp;Picture</h3>
                       <img className="profilePic" 
                             src={this.state.user.imageUrl ? this.state.user.imageUrl : "/images/profile.jpg"} 
-                            alt="Profile Picture"/>
+                            alt="Profile"/>
                       <br/>
                   </div>
                   <div style={{marginLeft:"2rem"}}>

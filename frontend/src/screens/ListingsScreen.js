@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import AccountSidebar from "../components/AccountSidebar";
+import SettingsNavigation from "../components/SettingsNavigation";
 import data from '../data';
 
 function ListingsScreen(props){

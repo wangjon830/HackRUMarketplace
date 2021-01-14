@@ -4,7 +4,9 @@ import Modal from 'react-modal';
 import FacebookLogin from 'react-facebook-login'
 import GoogleLogin from 'react-google-login';
 
-import Login from '../web/Login';
+import User from '../web/User';
+
+import '../styles/Login.css';
 
 class LoginScreen extends React.Component{
     constructor(props){
@@ -80,7 +82,7 @@ class LoginScreen extends React.Component{
             buttonDisabled: true
         })
 
-        await Login.login(this.state.email, this.state.password)
+        await User.login(this.state.email, this.state.password)
         .then(response=>{
             if(!response.success)
                 this.badLogin(response.message)
@@ -106,7 +108,7 @@ class LoginScreen extends React.Component{
         }
 
         var account = {firstName, lastName, email, password}
-        await Login.register(account)
+        await User.register(account)
         .then(response=>{
             if(!response.success)
                 this.setModalError(response.message);
@@ -139,7 +141,7 @@ class LoginScreen extends React.Component{
     }
 
     async authenticateUser(user){
-        await Login.authenticateUser(user)
+        await User.authenticateUser(user)
         .then(response=>{
             if(!response.success)
                 this.badLogin(response.message)

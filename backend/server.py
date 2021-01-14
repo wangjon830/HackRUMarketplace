@@ -13,6 +13,8 @@ import datetime
 import base64
 import io
 import os
+import sys
+import pprint
 from dotenv import load_dotenv
 # load environment variables
 load_dotenv()
@@ -97,6 +99,29 @@ def refresh():
     access_token = generateAccessToken(user)
     return jsonify({'success': True, 'access_token': access_token})
 
+# check if a password is set on user account
+
+
+@app.route('/checkPassword', methods=['POST'])
+def checkPassword():
+    db = client['marketplace']
+    users = db['users']
+    _id = request.get_json()['_id']
+    user = users.find_one({'_id': ObjectId(_id)})
+    if not user:
+        return json.dumps({'success': False, 'msg': 'Account not found'})
+
+    if 'hashedPassword' in user:
+        return json.dumps({
+            'success': True,
+            'is_set': True
+        })
+    else:
+        return json.dumps({
+            'success': True,
+            'is_set': False
+        })
+
 # Delete user from database
 
 
@@ -119,6 +144,8 @@ def add_user():
     db = client['marketplace']
     users = db['users']
     new_user = request.get_json()
+    new_user['watchlist'] = []
+    new_user['listings'] = []
 
     # check if email already registered
     user = users.find_one({'email': new_user['email']})
@@ -133,6 +160,86 @@ def add_user():
     return json.dumps({"success": True,
                        "msg": "Account successfully created",
                        'user': getUser(user),
+                       'watchlist': user['watchlist'],
+                       'access_token': access_token,
+                       'refresh_token': refresh_token
+                       })
+
+
+# Checks login credentials
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    db = client['marketplace']
+    users = db['users']
+    attempt = request.get_json()
+    user = users.find_one({'email': attempt['email']})
+    if user and 'hashedPassword' in user:
+        # compare passwords
+        if bcrypt.checkpw(attempt['password'].encode('utf-8'), user["hashedPassword"].encode('utf-8')):
+            # generate tokens
+            access_token = generateAccessToken(user)
+            refresh_token = generateRefreshToken(user)
+            return json.dumps({"success": True,
+                               "msg": "Login successful",
+                               'user': getUser(user),
+                               'watchlist': user['watchlist'],
+                               'access_token': access_token,
+                               'refresh_token': refresh_token
+                               })
+        else:
+            return json.dumps({"success": False, "msg": "Incorrect password"})
+    # email does not exist
+    return json.dumps({"success": False, "msg": "No account exists for this email"})
+
+# login / register using Facebook or Google
+
+
+@app.route('/oauth', methods=['POST'])
+def oAuth():
+    db = client['marketplace']
+    users = db['users']
+    userData = request.get_json()
+    # check if account already registered
+    if 'googleId' in userData:
+        user = users.find_one({'googleId': userData['googleId']})
+    elif 'facebookId' in userData:
+        user = users.find_one({'facebookId': userData['facebookId']})
+    message = 'Successfully authenticated'
+
+    # account not connected
+    if not user:
+        # if email is registered, merge accounts with existing account
+        user = users.find_one({'email': userData['email']})
+        if user:
+            userData.update(user)
+            user = userData
+            users.update_one(
+                {'_id':  user['_id']},
+                {
+                    '$set': user,
+                }
+            )
+            if 'googleId' in userData:
+                platform = 'Google'
+            elif 'facebookId' in userData:
+                platform = 'Facebook'
+            message = f'Connected {platform} to account'
+        # create new account
+        else:
+            userData['watchlist'] = []
+            userData['listings'] = []
+            _id = users.insert_one(userData).inserted_id
+            user = users.find_one({'_id': ObjectId(_id)})
+            message = 'Account successfully created'
+
+    access_token = generateAccessToken(userData)
+    refresh_token = generateRefreshToken(userData)
+    return json.dumps({"success": True,
+                       "msg": message,
+                       'user': getUser(user),
+                       'watchlist': user['watchlist'],
                        'access_token': access_token,
                        'refresh_token': refresh_token
                        })
@@ -157,7 +264,7 @@ def edit_user():
 
     # check if email was changed
     user = users.find_one({'_id': updated_user['_id']})
-    if user['email'] != updated_user['email']:
+    if 'email' in updated_user and user['email'] != updated_user['email']:
         # check if new email is already registered
         user = users.find_one({'email': updated_user['email']})
         if user:
@@ -170,81 +277,9 @@ def edit_user():
         }
     )
 
-    return json.dumps({"success": True})
+    user = users.find_one({'_id': updated_user['_id']})
 
-# Checks login credentials
-
-
-@app.route('/login', methods=['POST'])
-def login():
-    db = client['marketplace']
-    users = db['users']
-    attempt = request.get_json()
-    user = users.find_one({'email': attempt['email']})
-    if user:
-        # compare passwords
-        if bcrypt.checkpw(attempt['password'].encode('utf-8'), user["hashedPassword"].encode('utf-8')):
-            # generate tokens
-            access_token = generateAccessToken(attempt)
-            refresh_token = generateRefreshToken(attempt)
-            return json.dumps({"success": True,
-                               "msg": "Login successful",
-                               'user': getUser(user),
-                               'access_token': access_token,
-                               'refresh_token': refresh_token
-                               })
-        else:
-            return json.dumps({"success": False, "msg": "Incorrect password"})
-    # email does not exist
-    return json.dumps({"success": False, "msg": "No account exists for this email"})
-
-# login / register using Facebook or Google
-
-
-@app.route('/oauth', methods=['POST'])
-def oAuth():
-    db = client['marketplace']
-    users = db['users']
-    userData = request.get_json()
-    # check if account already registered
-    if 'googleId' in userData:
-        user = users.find_one({'googleId': userData['googleId']})
-    elif 'facebookId' in userData:
-        user = users.find_one({'facebookId': userData['facebookId']})
-    message = 'Successfully authenticated'
-
-    # account not registered
-    if not user:
-        # if email is registered, merge accounts with existing account
-        user = users.find_one({'email': userData['email']})
-        if user:
-            userData.update(user)
-            user = userData
-            users.update_one(
-                {'_id':  user['_id']},
-                {
-                    '$set': user,
-                }
-            )
-            if 'googleId' in userData:
-                platform = 'Google'
-            elif 'facebookId' in userData:
-                platform = 'Facebook'
-            message = f'Connected {platform} to account'
-        # create new account
-        else:
-            _id = users.insert_one(userData).inserted_id
-            user = users.find_one({'_id': ObjectId(_id)})
-            message = 'Account successfully created'
-
-    access_token = generateAccessToken(userData)
-    refresh_token = generateRefreshToken(userData)
-    return json.dumps({"success": True,
-                       "msg": message,
-                       'user': getUser(user),
-                       'access_token': access_token,
-                       'refresh_token': refresh_token
-                       })
+    return json.dumps({"success": True, 'msg': "Account updated", 'user': getUser(user)})
 
 # Get user info
 
@@ -296,32 +331,120 @@ def getUserFull(user):
         'snapchat': None if 'snapchat' not in user else user['snapchat']
     }
 
+# get list of watchlist item ids
+
+
+@app.route('/getWatchlist', methods=['POST'])
+@tokenRequired
+def getWatchlist():
+    db = client['marketplace']
+    users = db['users']
+    user_id = request.get_json()['_id']
+    user = users.find_one({'_id': ObjectId(user_id)})
+    if user:
+        return json.dumps({
+            'success': True,
+            'msg': 'Account found',
+            'watchlist': user['watchlist']
+        })
+    return json.dumps({'success': False, 'msg': 'Account not found'})
+
+# get list of watchlist item objects
+
+
+@app.route('/getWatchlistData', methods=['POST'])
+@tokenRequired
+def getWatchlistData():
+    db = client['marketplace']
+    items = db['items']
+    users = db['users']
+    user_id = request.get_json()['_id']
+    user = users.find_one({'_id': ObjectId(user_id)})
+    if user:
+        watchlist = []
+        # get item object for each id in watchlist
+        for item_id in user['watchlist']:
+            item = items.find_one({'_id': ObjectId(item_id)})
+            if item:
+                item['_id'] = str(item['_id'])
+                watchlist.append(item)
+            # item listing was removed, remove from user watchlist
+            else:
+                users.update_one(
+                    {'_id':  ObjectId(user_id)},
+                    {
+                        '$pull': {'watchlist': item_id},
+                    }
+                )
+
+        return json.dumps({
+            'success': True,
+            'msg': 'Account found',
+            'watchlist': watchlist
+        })
+    return json.dumps({'success': False, 'msg': 'Account not found'})
+
+# add item to watchlist
+
+
+@app.route('/addWatchlist', methods=['POST'])
+@tokenRequired
+def addWatchlistItem():
+    db = client['marketplace']
+    users = db['users']
+    data = request.get_json()
+    item_id = data['item_id']
+    user_id = data['user_id']
+    try:
+        users.update_one(
+            {'_id':  ObjectId(user_id)},
+            {
+                '$addToSet': {'watchlist': item_id},
+            }
+        )
+        user = users.find_one({'_id': ObjectId(user_id)})
+        return json.dumps({"success": True, 'msg': "Item added to watchlist", 'watchlist': user['watchlist']})
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        return json.dumps({"success": False, 'msg': "Could not add item to watchlist"})
+
+# remove item from watchlist
+
+
+@app.route('/removeWatchlist', methods=['POST'])
+@tokenRequired
+def removeWatchlistItem():
+    db = client['marketplace']
+    users = db['users']
+    data = request.get_json()
+    item_id = data['item_id']
+    user_id = data['user_id']
+    try:
+        users.update_one(
+            {'_id':  ObjectId(user_id)},
+            {
+                '$pull': {'watchlist': item_id},
+            }
+        )
+        user = users.find_one({'_id': ObjectId(user_id)})
+        return json.dumps({"success": True, 'msg': "Item removed from watchlist", 'watchlist': user['watchlist']})
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        return json.dumps({"success": False, 'msg': "Could not remove item from watchlist"})
+
 # Clean up and standardize text
 
 
 def textFormat(text):
-    newtext = ""
+    new_text = ""
     for a in text:
-        if a.isalpha() == True or a.isspace() == True:
-            newtext += a
-    newtext.lower()
-    newtext = list(newtext.split(" "))
-    return newtext
-
-# Gets item from ID
-
-
-@app.route('/getItem', methods=['GET'])
-def getID():
-    db = client['marketplace']
-    items = db['items']
-    id = request.args.get('id')
-    my_query = {"_id": ObjectId(id)}
-    item = items.find(my_query)
-    for x in item:
-        print("item found")
-        return dumps(x)
-    return "item not found"
+        if a.isalpha():
+            new_text += a
+        elif a.isspace():
+            new_text += " "
+    new_text.lower().strip()
+    new_text = list(new_text.split(" "))
+    return new_text
 
 
 # Search items in database
@@ -329,62 +452,37 @@ def getID():
 def search():
     db = client['marketplace']
     items = db['items']
-    items.create_index([('tags', 1)])
-    items.create_index([('title', 1)])
-    items.create_index([('description', 1)])
 
-    search_items = []
+    results = []
 
-    search_term = request.args.get('searchTerm')
-    search_t = textFormat(search_term)
-    # match terms in tags, title and description
-    for tags in search_t:
-        search_tags = items.find({'tags': {'$elemMatch': {'$eq': tags}}})
-        search_items.extend(list(search_tags))
+    query = request.args.get('q')
 
-    search_title = items.find({'title': {'$regex': ".*" + search_term + ".*"}})
-    search_desc = items.find(
-        {'description': {'$regex': ".*" + search_term + ".*"}})
+    items.create_index([('title', pymongo.TEXT)],
+                       name='item', default_language='english')
 
-    search_items.extend(list(search_title))
-    search_items.extend(list(search_desc))
-    # string similarity- leveshtein algorithm for scanning title and description
-    for query in items.find():
-        try:
-            desc = query["description"]
-            title = query["title"]
+    matches = items.find({
+        '$text': {'$search': query}
+    })
 
-            title_t = textFormat(title)
-            desc_t = textFormat(desc)
+    for item in matches:
+        item['_id'] = str(item['_id'])
+        results.append(item)
 
-            flag = 0
-            for input_1 in search_t:
-                for input_2 in title_t:
-                    if td.levenshtein.normalized_similarity(input_1, input_2) > .5:
-                        search_items.append(query)
-                        print(query)
-                        flag = 1
-                    if flag == 1:
-                        break
-                if flag == 1:
-                    break
-                for input_3 in desc_t:
-                    if td.levenshtein.normalized_similarity(input_1, input_3) > .5:
-                        search_items.append(query)
-                        flag = 1
-                        break
-                    if flag == 1:
-                        break
-                if flag == 1:
-                    break
-        except:
-            pass
-    jsondata = dumps(search_items)
-    jsonlist = json.loads(jsondata)
-    # remove duplicate objects
-    jsons = {repr(each): each for each in jsonlist}.values()
+    return dumps({'results': results})
 
-    return dumps(jsons)
+# Gets item from ID
+
+
+@app.route('/getItem', methods=['GET'])
+def getItem():
+    db = client['marketplace']
+    items = db['items']
+    id = request.args.get('id')
+    item = items.find_one({'_id': ObjectId(id)})
+    if item:
+        item['_id'] = str(item['_id'])
+        return dumps({'success': True, 'item': item})
+    return dumps({'success': False, 'msg': 'Item not found'})
 
 # Deletes Item from items database
 

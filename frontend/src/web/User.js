@@ -3,7 +3,7 @@ var bcrypt = require('bcryptjs');
 
 const ACCESS_DURATION = new Date(new Date().getTime() + 30 * 60 * 1000);
 const REFRESH_DURATION = 30;
-export default class Login {
+export default class User {
     static getRefreshToken(){
         return Cookies.get('refresh');
     }
@@ -17,6 +17,7 @@ export default class Login {
         Cookies.set('access', token, {expires: ACCESS_DURATION})
     }
 
+    // check if access token valid and refresh if not
     static async checkAccess(user){
         var accessToken = Cookies.get('access');
         var refreshToken = Cookies.get('refresh')
@@ -47,6 +48,38 @@ export default class Login {
         return true;
     }
 
+    // check if password is correct
+    static async verifyPassword(password){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+
+        try{
+            var response = await fetch('http://127.0.0.1:5000/login', {
+                method: 'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: user.email,
+                    password
+                })
+            })
+            .then(response=>response.json())
+            .then(data =>{
+                if(data && data.success){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            })  
+            return response;          
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
     static async login(email, password){
         try{
             var response = await fetch('http://127.0.0.1:5000/login', {
@@ -64,7 +97,7 @@ export default class Login {
             .then(data =>{
                 if(data && data.success){
                     // values must be saved as string in LocalStorage
-                    this.saveAccountInfo(JSON.stringify(data.user), data.access_token, data.refresh_token);
+                    this.saveAccountInfo(data, data.access_token, data.refresh_token);
                     return {success: true}
                 }
                 else if(data && !data.success){
@@ -102,15 +135,11 @@ export default class Login {
             .then(response => response.json())
             .then(data =>{
                 if(data && data.success){
-                    this.saveAccountInfo(JSON.stringify(data.user), data.access_token, data.refresh_token);
+                    this.saveAccountInfo(data, data.access_token, data.refresh_token);
                     return {success: true}
                 }
-                else if(data && !data.success){
-                    return {success: false, message: "An account already exists for this email"};
-                }
-                else{
-                    return {success: false, message: "Account could not be created"};
-                }
+                else
+                    return {success: false, message: data.msg};
             })      
             return response;      
         }
@@ -135,15 +164,101 @@ export default class Login {
             .then(data => {
                 if(data && data.success){
                     // values must be saved as string in LocalStorage
-                    this.saveAccountInfo(JSON.stringify(data.user), data.access_token, data.refresh_token);
+                    this.saveAccountInfo(data, data.access_token, data.refresh_token);
                     return {success: true}
                 }
-                else if(data && !data.success){
+                else 
                     return {success: false, message: data.msg};
+            })   
+            return response;         
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
+    static async changePassword(newPassword){
+        let hashedPassword = await bcrypt.hash(newPassword, 10)
+        var response = await this.editUser({hashedPassword});
+        return response;
+    }
+
+    static async editUser(updatedUser){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = {_id: user._id, user: updatedUser};
+
+        var response = await this.protectedAction(body, 'editUser');
+        return response;
+    }
+
+    static async isInWatchlist(item_id){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = { _id: user._id}
+
+        var response = await this.protectedAction(body, 'getWatchlist');
+        if(!response.success)
+            return false;
+        return response.watchlist.includes(item_id);
+    }
+
+    static async getWatchlist(){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = { _id: user._id}
+
+        var response = await this.protectedAction(body, 'getWatchlistData');
+        return response;
+    }
+
+    static async addToWatchlist(item_id){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = { user_id: user._id, item_id}
+
+        var response = await this.protectedAction(body, 'addWatchlist');
+        return response;
+    }
+
+    static async removeFromWatchlist(item_id,){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = { user_id: user._id, item_id}
+
+        var response = await this.protectedAction(body, 'removeWatchlist');
+        return response;
+    }
+
+    static async protectedAction(body, route){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+
+        // make sure access token is valid
+        var hasAccess = await this.checkAccess(user)
+        if(!hasAccess)
+            return {success: false, message: "Tokens invalid"}
+
+        try{
+            var response = await fetch('http://127.0.0.1:5000/' + route, {
+                method: 'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    Object.assign(body, {
+                        refresh_token: Cookies.get('refresh'),
+                        access_token: Cookies.get('access')
+                    })
+                )
+            })
+            .then(response => response.json())
+            .then(async (data) => {
+                // update LocalStorage if necessary
+                if(data && data.success && data.user)
+                    window.localStorage.setItem('user', JSON.stringify(data.user));
+                // access token was invalid and server provided new access token
+                else if(data.access_token){
+                    this.setAccessToken(data.access_token)
+                    // try again
+                    return await this.protectedAction(body, route);
                 }
-                else{
-                    return {success: false, message: "Could not authenticate"}
-                }
+                return data;
             })   
             return response;         
         }
@@ -153,7 +268,7 @@ export default class Login {
     }
 
     static saveAccountInfo(accountJson, accessToken, refreshToken){
-        window.localStorage.setItem('user', accountJson);
+        window.localStorage.setItem('user', JSON.stringify(accountJson.user));
         Cookies.set('access', accessToken, {expires: ACCESS_DURATION});
         Cookies.set('refresh', refreshToken, {expires: REFRESH_DURATION});
     }

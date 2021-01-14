@@ -63,58 +63,6 @@ header a {
   color: #fd5252;
 }
 
-.hamburger-btn {
-  font-size: 2.2rem;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-.sidebar {
-  position: fixed;
-  transform: translateX(-100%);
-  width: 20rem;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  background-color: #f0f0f0;
-  transition: all 0.5s;
-  z-index: 100;
-  box-shadow: 0 5px 15px#878787;
-}
-
-.sidebar.open {
-  transform: translateX(0);
-}
-
-.sidebar-close-btn {
-  border-radius: 50%;
-  border: 0.1rem #000000 solid;
-  width: 3rem;
-  height: 3rem;
-  padding: 0.5rem;
-  font-size: 2rem;
-  cursor: pointer;
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-}
-
-.sidebar li {
-  list-style: none;
-}
-
-.overlay {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 99;
-}
-
 .content {
   padding-bottom: 2rem;
 }

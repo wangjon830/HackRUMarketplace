@@ -1,52 +1,51 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import data from '../data';
+
+import Item from '../web/Item';
 
 class ResultsScreen extends React.Component{
     constructor(props){
         super(props);
         this.state={
+            query: "",
             results: []
         }
     }
 
-    doSearch(){
-        console.log(this.props.location.state);
-        let searchTerm = this.props.params.searchTerm;
-        document.getElementById('searchTerm').innerHTML = (searchTerm);
-        var request = new XMLHttpRequest();
-        request.open("GET", "http://127.0.0.1:5000/search?searchTerm=" + searchTerm);
-        request.onload = function() {
-             let results = request.response;
-            console.log(results);
-        };
-        request.send();
-        //console.log(this.setItem);
+    async componentDidMount(){
+        let query = this.props.location.search;
+        var results = (await Item.search(query)).results; 
+
+        query = query.substring("?q=".length).replaceAll("+", " ");
+        this.setState({query, results})
     }
     
     render(){
-        return <div className="homeContainer" onLoad={()=>this.doSearch()}>
-        <div className="homeCategory" id="homeTextbooks">
-            <div className="homeHeader">Search Results for <div id="searchTerm" style={{color:'#901818',display: 'inline-block'}}></div><hr/></div>
-            <ul className="products">
-                {data.products.map(product=>
-                <li>
-                    <div className="product">
-                        <Link to={"/products/"+product._id}>
-                            <img className="product-image" src={product.images[0]} alt="product"/>
-                        </Link>
-                        <div className="product-name">
-                            <Link to={"/products/"+product._id}>
-                                {product.name}
-                            </Link>
-                        </div>
-                        <div className="product-price">${product.price}</div>
-                    </div>
-                </li>
-                )}
-            </ul>
+        return <div className="homeContainer">
+            <div className="homeCategory" id="homeTextbooks">
+                <div className="homeHeader">
+                    Search Results for "<div id="query" style={{color:'#901818',display: 'inline-block'}}>{this.state.query}</div>"
+                    <hr/>
+                </div>
+                <ul className="items">
+                    {this.state.results.map((item, i)=>
+                        <li key={"result" + i}>
+                            <div className="item">
+                                <Link to={"/listings/?id="+item._id}>
+                                    <img className="itemImage" src={item.images[0]} alt="product"/>
+                                </Link>
+                                <div className="itemName">
+                                    <Link to={"/listings/?id="+item._id}>
+                                        {item.title}
+                                    </Link>
+                                </div>
+                                <div className="itemPrice">${item.price}</div>
+                            </div>
+                        </li>
+                    )}
+                </ul>
+            </div>
         </div>
-    </div>
     }
     
 }

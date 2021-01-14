@@ -1,63 +1,75 @@
-import React,{useState} from 'react';
-import {Link, useHistory, withRouter} from 'react-router-dom';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import React from 'react';
+import {Link} from 'react-router-dom';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
-import {observer} from "mobx-react";
+import '../styles/NotificationDropdown.css';
 
-const NotificationDropdown = ({notificationsOpen, openNotifications, closeNotifications}) => {
-    let history = useHistory();
-    history.listen((location, action) => {
-        // closeNotifications();
-    });
-
-    const toggleNotifications = ()=>{
-        if(notificationsOpen)
-            closeNotifications()
-        else
-            openNotifications()
+class NotificationDropdown extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={
+            notificationsOpen: false
+        }
     }
 
-    return (
-        <div style={{position:"relative"}}>
-            <button className="dropdownButton" style={{marginLeft: "1rem"}} onClick={()=>toggleNotifications()}>
-                <NotificationsIcon style={{float:"left"}}/>
-                {notificationsOpen ? <ArrowDropUpIcon/> : <ArrowDropDownIcon/>}
-            </button> 
-            <div className="notifications">
-                <div className="arrowUp"/>
-                <div className="dropdownHeader">
-                    <div style={{display: "flex", flexDirection:"column", justifyContent:"center", marginLeft:"0.5rem", padding:"0"}}>
-                        <h3>Notifications</h3>
+    openNotifications(){
+        this.props.closeDropdown();
+        this.setState({notificationsOpen: true});
+        document.querySelector(".notifications").style.display="block";
+    }
+
+    closeNotifications(){
+        this.setState({notificationsOpen: false});
+        document.querySelector(".notifications").style.display="none";
+    }
+
+    toggleNotifications(){
+        if(this.state.notificationsOpen)
+            this.closeNotifications()
+        else
+            this.openNotifications()
+    }
+
+    render(){
+        return (
+            <div style={{position:"relative"}}>
+                <button className="dropdownButton" style={{marginLeft: "1rem"}} onClick={()=>this.toggleNotifications()}>
+                    <NotificationsIcon style={{float:"left"}}/>
+                </button> 
+                <div className="notifications">
+                    <div className="arrowUp"/>
+                    <div className="dropdownHeader">
+                        <div style={{display: "flex", flexDirection:"column", justifyContent:"center", marginLeft:"0.5rem", padding:"0"}}>
+                            <h3>Notifications</h3>
+                        </div>
+                    </div>
+                    
+                    <div className="dropdownButtons">
+                        <Link>
+                            <button>
+                                From Me: pee
+                            </button>
+                        </Link>
+                        <Link>
+                            <button>
+                                From Rahul: i love u
+                            </button>
+                        </Link>
+                        <Link>
+                            <button>
+                                From God: die
+                            </button>
+                        </Link>
+                        <Link>
+                            <button>
+                                From ???: help
+                            </button>
+                        </Link>
                     </div>
                 </div>
-                
-                <div className="dropdownButtons">
-                    <Link>
-                        <button>
-                            From Me: pee
-                        </button>
-                    </Link>
-                    <Link>
-                        <button>
-                            From Rahul: i love u
-                        </button>
-                    </Link>
-                    <Link>
-                        <button>
-                            From God: die
-                        </button>
-                    </Link>
-                    <Link>
-                        <button>
-                            From ???: help
-                        </button>
-                    </Link>
-                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
-export default observer(withRouter(NotificationDropdown));
+export default NotificationDropdown;

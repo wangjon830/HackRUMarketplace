@@ -22,27 +22,30 @@
   }
 }
 .sidenav .navItem {
-  padding: 12px 12px 12px 0px;
+  position: relative;
+  box-sizing: border-box;
+  padding-left: 24px;
+  height: 45px;
+  display: flex;
+  align-items: center;
   text-decoration: none;
   font-size: 15px;
   border: 1px solid #bcbcbc;
   color: black;
   background-color: white;
 }
-.navItem SettingActive {
-  position: relative;
-  padding: 12px 3px 12px 3px;
+
+.active::before {
+  content: "";
   background-color: #d34f4f;
-  background-clip: padding-box;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 7px;
 }
-.navItem SettingStatus {
-  position: relative;
-  padding: 12px 3px 12px 3px;
-  background-clip: padding-box;
-}
-.navItem:hover SettingStatus {
-  background-color: #d34f4f;
-}
+
 .sidenav .navItem:hover {
   background-color: #efefef;
 }
@@ -54,12 +57,13 @@
   line-height: 10px;
   max-width: 50%;
 }
-.settingsItem {
+#accountScreen .settingsItem {
   padding: 0px 0px 2rem 0px;
   display: flex;
   align-items: center;
 }
-.settingsItem button {
+
+#accountScreen .settingsItem button {
   background-color: grey;
   border-radius: 5px;
   border: none;
@@ -70,14 +74,14 @@
   display: inline-block;
   font-size: 15px;
 }
-.settingsItem button:hover {
+#accountScreen .settingsItem button:hover {
   background-color: #5a5a5a;
 }
 .settingsItem input {
   padding: 5px 10px;
 }
 
-.settingsItem div {
+#accountScreen .settingsItem div {
   background-color: #dedede;
   flex: 1 1;
   margin-left: 1.5rem;
