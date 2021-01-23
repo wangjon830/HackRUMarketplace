@@ -1,0 +1,179 @@
+#listingsScreen {
+  display: flex;
+  width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+#listingsScreen .label {
+  color: #a8a8a8;
+  margin-left: 1.5rem;
+}
+
+#listingsScreen .label:first-of-type {
+  margin-left: 0;
+}
+
+#listingsScreen .items {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#listingsScreen ul {
+  padding: 0;
+  margin: 0;
+}
+
+#listingsScreen .item {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+#listingsScreen .items a:hover {
+  color: #ff8000;
+}
+
+#listingsScreen .item .label {
+  color: black;
+  font-size: 1rem;
+}
+
+#listingsScreen .items li {
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+#listingsScreen .itemImage {
+  width: 10%;
+}
+
+#listingsScreen .itemImage img {
+  object-fit: contain;
+  max-width: 100%;
+  max-height: 80px;
+}
+
+#listingsScreen .itemName {
+  flex: 1;
+  margin-left: 1.5rem;
+}
+
+#listingsScreen .itemPrice {
+  width: 5%;
+  min-width: 50px;
+}
+
+#listingsScreen .itemDate {
+  width: 10%;
+  min-width: 90px;
+}
+
+#listingsScreen .itemUserCount {
+  width: 10%;
+  min-width: 130px;
+}
+
+#listingsScreen .item .buttonSection,
+#listingsScreen .itemLabels .buttonSection {
+  width: 7%;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+}
+
+#listingsScreen .buttonSection div {
+  cursor: pointer;
+}
+
+#listingsScreen .footer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin-right: 4rem;
+  margin-bottom: 2rem;
+}
+
+#listingsScreen .footer a,
+#listingsScreen .footer a:visited,
+#listingsScreen .footer a:hover,
+#listingsScreen .footer a:active {
+  color: black;
+}
+
+#listingsScreen .footer div {
+  background: none;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  width: 200px;
+  margin-left: 1rem;
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  background-color: #43de40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#listingsScreen .placeholderText {
+  padding-top: 2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+#listingsScreen .overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9;
+  background: rgba(161, 161, 161, 0.4);
+}
+
+#listingsScreen .confirmWindow {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 30%;
+  padding-top: 1rem;
+  background: white;
+}
+
+#listingsScreen .confirmWindow .buttonSection {
+  width: 100%;
+  display: flex;
+  border-top: 1px solid #bebebe;
+}
+
+#listingsScreen .confirmWindow .buttonSection button {
+  flex: 1;
+  background: none;
+  outline: none;
+  border: none;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+#listingsScreen .confirmWindow .buttonSection button:hover {
+  background: #ededed;
+}
+
+#listingsScreen .confirmWindow .closeBtn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+}

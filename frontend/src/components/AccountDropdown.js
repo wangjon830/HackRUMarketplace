@@ -48,12 +48,12 @@ class AccountDropdown extends React.Component {
         return (
             <div style={{position:"relative"}}>
                 <button className="dropdownButton" onClick={()=>this.toggleDropdown()}>
-                    <img className="profileThumbnail" src={user.imageUrl ? user.imageUrl : "/images/profile.jpg"}  alt="Profile"/>
+                    <img className="profileThumbnail" src={user.profilePic ? user.profilePic : "/images/profile.jpg"}  alt="Profile"/>
                 </button>
                 <div className="dropdown">
                     <div className="arrowUp"/>
                     <div className="dropdownHeader">
-                        <img className="dropdownProfilePic" src={user.imageUrl ? user.imageUrl : "/images/profile.jpg"}  alt="Profile"/>
+                        <img className="dropdownProfilePic" src={user.profilePic ? user.profilePic : "/images/profile.jpg"}  alt="Profile"/>
                         <div style={{display: "flex", flexDirection:"column", justifyContent:"center", marginLeft:"0.5rem"}}>
                             <p id="dropdownName">{user.firstName + " " + user.lastName}</p>
                             <p id="dropdownEmail">{user.email}</p>

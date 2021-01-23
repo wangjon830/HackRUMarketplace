@@ -3,7 +3,7 @@ import {Link, withRouter} from 'react-router-dom';
 
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import AddIcon from '@material-ui/icons/Add';
+import StyleIcon from '@material-ui/icons/Style';
 
 import Searchbar from './Searchbar';
 import Sidebar from './Sidebar';
@@ -42,7 +42,7 @@ class Navbar extends React.Component{
                 <div className="headerLinks"> 
                     {user ?
                         <div style={{display: 'flex', justifyContent:'center', alignItems:'center'}}>
-                            <Link to="/makeListing"><div className="headerButton"><AddIcon style={{marginRight:"0.2rem"}}/>New&nbsp;Listing</div></Link>
+                            <Link to="/listings"><div className="headerButton"><StyleIcon style={{marginRight:"0.2rem"}}/>Listings</div></Link>
                             <Link to="/watchlist"><div className="headerButton"><VisibilityIcon style={{marginRight:"0.2rem"}}/>Watchlist</div></Link>
                             <NotificationDropdown closeDropdown={()=>this.accountDropdown.current.closeDropdown} ref={this.notificationDropdown} />
                             <AccountDropdown closeNotifications={()=>this.notificationDropdown.current.closeNotifications} redirect={()=>this.redirect()} ref={this.accountDropdown}/>

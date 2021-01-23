@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: center;
   max-width: 600px;
-  padding-left: 3rem;
+  margin-left: 1rem;
 }
 
 #securityScreen .settingsItemHeader {
@@ -60,9 +60,12 @@
   align-items: center;
 }
 
-#securityScreen hr {
-  width: 80%;
+#securityScreen .settingsItem hr {
+  width: 100%;
+  margin: 0;
+  margin-top: 1rem;
   margin-bottom: 2rem;
+  align-self: flex-start;
 }
 
 .emailInput {

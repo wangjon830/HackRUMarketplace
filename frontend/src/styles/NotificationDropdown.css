@@ -1,13 +1,26 @@
+.unreadAlert {
+  background: #ff4040;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 15px;
+  height: 15px;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
 .notifications {
   display: none;
   position: absolute;
-  width: 300px;
+  width: 350px;
   margin-top: 1rem;
   right: 0.25rem;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 0 5px #b5b9ba;
-  padding-bottom: 2rem;
+  padding-bottom: 1rem;
   z-index: 10;
 }
 
@@ -15,19 +28,22 @@
   margin: 0;
 }
 
-.notifications button {
-  outline: none;
-  border: none;
-  background: none;
+.notificationItem {
   width: 100%;
   padding: 0.5rem;
+  box-sizing: border-box;
   font-size: 0.9rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
+  border-bottom: 1px solid #b5b9ba;
 }
 
-.notifications button:hover {
+.notificationItem:hover {
   background-color: #dedede;
+}
+
+.notificationItem .deleteButton {
+  padding-left: 1rem;
 }

@@ -34,7 +34,7 @@ class Sidebar extends React.Component{
 
     render(){
         return (
-            <div>
+            <div id="sidebar">
                 <div className="logo">
                     <button className="hamburger-btn" onClick={()=>this.toggleSidebar()}>
                         &#9776;

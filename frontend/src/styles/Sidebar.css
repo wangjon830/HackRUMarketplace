@@ -41,7 +41,7 @@
   list-style: none;
 }
 
-.overlay {
+#sidebar .overlay {
   position: fixed;
   left: 0;
   right: 0;

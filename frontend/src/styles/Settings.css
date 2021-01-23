@@ -1,0 +1,86 @@
+.sidenav {
+  width: 15vw;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  margin-top: 3rem;
+  margin-left: 6rem;
+  margin-right: 3rem;
+  min-width: 200px;
+}
+/* @media only screen and (max-width: 1000px) {
+    .sidenav {
+      padding: 2rem 1rem 2rem 1rem;
+    }
+  }
+  @media only screen and (min-width: 1000px) {
+    .sidenav {
+      padding: 2rem 1rem 2rem 17rem;
+    }
+  } */
+.sidenav .navItem {
+  position: relative;
+  box-sizing: border-box;
+  padding-left: 24px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: 15px;
+  border: 1px solid #bcbcbc;
+  color: black;
+  background-color: white;
+}
+
+.active::before {
+  content: "";
+  background-color: #d34f4f;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 7px;
+}
+
+.sidenav .navItem:hover {
+  background-color: #efefef;
+}
+
+.settings {
+  position: relative;
+  float: left;
+  padding: 1rem 2rem 2rem 1rem;
+  line-height: 10px;
+  max-width: 50%;
+}
+
+.settingsScreen {
+  width: 100vw;
+  display: flex;
+}
+
+.pageContent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.settingsHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.headText h1 {
+  font-size: 3rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.headText hr {
+  margin: 0;
+  width: 80%;
+  margin-bottom: 2rem;
+}

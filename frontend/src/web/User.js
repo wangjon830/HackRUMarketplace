@@ -4,6 +4,18 @@ var bcrypt = require('bcryptjs');
 const ACCESS_DURATION = new Date(new Date().getTime() + 30 * 60 * 1000);
 const REFRESH_DURATION = 30;
 export default class User {
+    static isLoggedIn(){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+
+        return user != null
+    }
+
+    // check if user id is same as logged in account
+    static isUser(user_id){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        return user._id === user_id;
+    }
+
     static getRefreshToken(){
         return Cookies.get('refresh');
     }
@@ -183,11 +195,68 @@ export default class User {
         return response;
     }
 
+    static async getAccount(user_id){
+        try{
+            var response = await fetch('http://127.0.0.1:5000/getAccount', {
+                method: 'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    _id: user_id
+                })
+            })
+            .then(response=>response.json())
+            .then(data => {
+                if(data && data.success)
+                    return {success: true, message: data.msg, user: data.user};
+                else
+                    return {success: false, message: data.msg};
+            })
+            return response;
+        }
+        catch(e){
+            console.log(e);
+            return;
+        }
+    }
+
     static async editUser(updatedUser){
         var user = JSON.parse(window.localStorage.getItem('user'));
         var body = {_id: user._id, user: updatedUser};
 
         var response = await this.protectedAction(body, 'editUser');
+        return response;
+    }
+
+    static async markRead(){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = {_id: user._id};
+
+        var response = await this.protectedAction(body, 'markRead');
+        return response;
+    }
+
+    static async getNotifications(){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = {_id: user._id};
+
+        var response = await this.protectedAction(body, 'getNotifications');
+        return response;
+    }
+
+    static async removeNotification(notification_id){
+        var body = {_id: notification_id};
+
+        var response = await this.protectedAction(body, 'removeNotification');
+        return response;
+    }
+
+    static async getUserList(item_id){
+        var body = {item_id};
+
+        var response = await this.protectedAction(body, 'getUserList');
         return response;
     }
 
@@ -198,10 +267,18 @@ export default class User {
         var response = await this.protectedAction(body, 'getWatchlist');
         if(!response.success)
             return false;
-        return response.watchlist.includes(item_id);
+        return item_id in response.watchlist;
     }
 
     static async getWatchlist(){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = { _id: user._id}
+
+        var response = await this.protectedAction(body, 'getWatchlist');
+        return response;
+    }
+
+    static async getWatchlistData(){
         var user = JSON.parse(window.localStorage.getItem('user'));
         var body = { _id: user._id}
 
@@ -222,6 +299,37 @@ export default class User {
         var body = { user_id: user._id, item_id}
 
         var response = await this.protectedAction(body, 'removeWatchlist');
+        return response;
+    }
+
+    static async getListingData(){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = { _id: user._id}
+
+        var response = await this.protectedAction(body, 'getListingData');
+        return response;
+    }
+
+    static async postListing(item){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = { user_id: user._id, item}
+
+        var response = await this.protectedAction(body, 'addItem');
+        return response;
+    }
+
+    static async deleteListing(item_id){
+        var user = JSON.parse(window.localStorage.getItem('user'));
+        var body = { user_id: user._id, item_id}
+
+        var response = await this.protectedAction(body, 'deleteItem');
+        return response;
+    }
+
+    static async editListing(new_item){
+        var body = {new_item}
+
+        var response = await this.protectedAction(body, 'editItem');
         return response;
     }
 

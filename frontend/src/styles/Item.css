@@ -107,7 +107,8 @@
 }
 
 .listing-info p {
-  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
 }
 
 .listing-info p:last-of-type {
@@ -126,6 +127,7 @@
 
 .details-action-text p {
   margin-bottom: 1rem;
+  font-size: 1.2rem;
 }
 
 .details-action-buttons {
@@ -151,4 +153,31 @@
 
 #contact-button {
   background-color: #ff8317;
+}
+
+#itemScreen .userList {
+  margin-top: 3rem;
+  border: 1px solid #c2c2c2;
+  border-radius: 5px;
+  padding-bottom: 1rem;
+}
+
+#itemScreen .userItem {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  padding: 0.5rem;
+  padding-left: 2rem;
+}
+
+#itemScreen .userItem:hover {
+  background-color: #e4e4e4;
+}
+
+#itemScreen .profilePic {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: 1px solid black;
+  margin-right: 2rem;
 }

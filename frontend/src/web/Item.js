@@ -13,8 +13,8 @@ export default class Item {
     }
 
     // get specific item from database
-    static async getItem(query){
-        var response = await fetch('http://127.0.0.1:5000/getItem' + query, {
+    static async getItem(id){
+        var response = await fetch('http://127.0.0.1:5000/getItem?id=' + id, {
             method: 'get',
             headers:{
                 'Accept': 'application/json',

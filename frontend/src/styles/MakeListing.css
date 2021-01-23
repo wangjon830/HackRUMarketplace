@@ -1,66 +1,99 @@
-.listing{
-    display:block;
-    position:relative;
-    width:50vw;
-    margin: 0 25% 0 25%;
-    
+#newListingScreen {
+  width: 100%;
 }
 
-.listingHead{
-    position:relative;
-    width:100%;
-    text-align: center;
+.listing {
+  display: block;
+  position: relative;
+  width: 50vw;
+  margin: 0 25% 0 25%;
 }
 
-.listingForm{
-    text-align: center;
-    width:80%;
-    margin: 0 10% 0 10%;
-    text-align: left;
-}
-
-.listingValue{
-    padding: 10px;
-    font-size: 20px;
-    font-weight: 400;
-}
-
-.listingValue sectionHead{
-    font-size: 25px;
-    font-weight: 700;
-}
-
-.listingValue .wideInput{
-    width:100%;
-    font-size: 20px;
-    padding: 10px 5px 10px 5px;
-    margin: 2px;
-}
-
-.listingValue .narrowInput{
-    width:30%;
-    font-size: 20px;
-    padding: 10px 5px 10px 5px;
-    margin: 2px;
-}
-.listingValue .mediumInput{
-    width:50%;
-    font-size: 18px;
-    padding: 5px;
-    margin: 2px;
-}
-
-.listing .buttonDark {
-  background-color: grey;
-  border-radius: 5px;
-  border: none;
-  color: white;
-  padding: 5px 10px;
+.listingHead {
+  position: relative;
+  width: 100%;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 15px;
 }
-.listing .buttonDark:hover {
-  background-color: #5a5a5a;
+
+.listingForm {
+  text-align: center;
+  width: 80%;
+  margin: 0 10% 0 10%;
+  text-align: left;
+  position: relative;
+  padding-bottom: 5rem;
+}
+
+#newListingScreen .listingValue {
+  padding: 10px;
+  font-size: 20px;
+  font-weight: 400;
+  display: flex;
+}
+
+#newListingScreen .inputContainer {
+  margin-left: 1rem;
+  font-size: 1.3rem;
+  width: 100%;
+}
+
+#newListingScreen textarea.inputContainer {
+  outline: none;
+  font: 400 1rem Arial;
+  padding: 7px;
+}
+
+.preview {
+  position: relative;
+  padding: 0;
+  width: 200px;
+  height: 200px;
+}
+
+.preview img {
+  object-fit: contain;
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+#newListingScreen .imageOverlay {
+  background: rgba(92, 92, 92, 0.4);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border: 1px solid black;
+}
+
+#newListingScreen .imageOverlay:hover {
+  opacity: 1;
+}
+
+#newListingScreen .buttonContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+}
+
+#newListingScreen .submitBtn {
+  background: none;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  width: 130px;
+  margin-left: 1rem;
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  background-color: #43de40;
 }

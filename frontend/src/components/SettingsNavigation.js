@@ -15,10 +15,6 @@ function AccountSidebar(props){
             link: "/settings/transaction",
             text: "Your Transactions"
         },
-        {
-            link: "/settings/listings",
-            text: "Your Listings"
-        }
     ]
 
     return (

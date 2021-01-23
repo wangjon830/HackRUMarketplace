@@ -22,7 +22,7 @@ body {
 main {
   flex: 1 1;
   display: flex;
-  padding-bottom: 2rem;
+  /* padding-bottom: 2rem; */
 }
 
 header {
@@ -65,4 +65,8 @@ header a {
 
 .content {
   padding-bottom: 2rem;
+}
+
+a {
+  text-decoration: none;
 }

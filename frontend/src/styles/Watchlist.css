@@ -15,35 +15,18 @@
   box-sizing: border-box;
 }
 
-.label {
+#watchlistScreen .label {
   color: #a8a8a8;
   margin-left: 1.5rem;
 }
 
-.label:first-of-type {
+#watchlistScreen .label:first-of-type {
   margin-left: 0;
-}
-
-#imageLabel {
-  width: 10%;
-}
-
-#nameLabel {
-  flex: 1;
-}
-
-#priceLabel {
-  width: 10%;
-}
-
-#posterLabel {
-  width: 10%;
 }
 
 #watchlistScreen .items {
   display: flex;
   flex-direction: column;
-  margin-top: 2rem;
   padding: 0 1rem;
   width: 100%;
   box-sizing: border-box;
@@ -54,7 +37,7 @@
   margin: 0;
 }
 
-#watchlistScreen li {
+#watchlistScreen .item {
   margin: 0;
   list-style: none;
   width: 100%;
@@ -63,8 +46,18 @@
   align-items: center;
 }
 
-.item .label {
+#watchlistScreen .items a:hover {
+  color: #ff8000;
+}
+
+#watchlistScreen .item .label {
   color: black;
+  font-size: 1rem;
+}
+
+#watchlistScreen .items li {
+  margin: 0;
+  list-style: none;
 }
 
 #watchlistScreen .itemImage {
@@ -74,19 +67,42 @@
 #watchlistScreen .itemImage img {
   object-fit: contain;
   max-width: 100%;
-  max-height: 100px;
+  max-height: 80px;
 }
 
 #watchlistScreen .itemName {
   flex: 1;
+  margin-left: 1.5rem;
 }
 
 #watchlistScreen .itemPrice {
-  font-weight: normal;
-  width: 10%;
+  width: 5%;
+  min-width: 50px;
 }
 
 #watchlistScreen .itemPoster {
-  font-weight: normal;
   width: 10%;
+  min-width: 90px;
+}
+
+#watchlistScreen .buttonSection {
+  width: 8%;
+  display: flex;
+  justify-content: flex-start;
+  align-self: center;
+}
+
+#watchlistScreen .buttonSection button {
+  color: #1657fa;
+  background: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
+#watchlistScreen .placeholderText {
+  padding-top: 2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 1.3rem;
 }

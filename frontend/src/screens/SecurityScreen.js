@@ -102,8 +102,8 @@ class SecurityScreen extends React.Component{
     
     // if password is already set, check if current password is correct
     if(this.state.passwordSet)
-    var passwordCorrect = await User.verifyPassword(this.state.currentPassword).
-    then(response=>{
+    var passwordCorrect = await User.verifyPassword(this.state.currentPassword)
+    .then(response=>{
       if(!response){
         this.setPasswordMessage("Password is incorrect", '#ff3d3d');
         return false;
@@ -176,10 +176,13 @@ class SecurityScreen extends React.Component{
   render(){
     var user = JSON.parse(window.localStorage.getItem('user'))
     return( 
-      <div id="securityScreen">
+      <div id="securityScreen"  className="settingsScreen">
           <SettingsNavigation pathname={this.props.location.pathname}/>
-          <div className="settings">
-              <div className="headText"><h1>Login&nbsp;&amp;&nbsp;Security&nbsp;Settings<hr/></h1></div>
+          <div className="pageContent">
+              <div className="settingsHeader">
+                <h1>Login&nbsp;&amp;&nbsp;Security&nbsp;Settings</h1>
+                <hr/>
+              </div>
 
               <div className="settingsItem">
                 <div className="settingsItemHeader">
@@ -212,9 +215,9 @@ class SecurityScreen extends React.Component{
                   </div>
                   <div id="emailMessageDisplay" className="messageDisplay">{this.state.emailMessage}</div>
                 </div>
+                <hr/>
               </div>
 
-              <hr/>
 
               <div className="settingsItem">
                 <div className="settingsItemHeader">

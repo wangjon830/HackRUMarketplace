@@ -1,0 +1,86 @@
+#editItemScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+#editItemScreen .listingValue {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem 0;
+}
+
+#editItemScreen .sectionLabel {
+  font-size: 1.2rem;
+}
+
+#editItemScreen .inputContainer {
+  width: 80%;
+  box-sizing: border-box;
+  margin-left: 1rem;
+  display: flex;
+  /* justify-content: space-evenly; */
+  flex-wrap: wrap;
+}
+
+#editItemScreen .inputContainer .radioItem {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+#editItemScreen .radioItem label {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+
+#editItemScreen .imageOverlay {
+  background: rgba(92, 92, 92, 0.4);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border: 1px solid black;
+}
+
+#editItemScreen .imageOverlay:hover {
+  opacity: 1;
+}
+
+#editItemScreen .buttonContainer {
+  position: fixed;
+  bottom: 0;
+  width: 60%;
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 2rem;
+}
+
+#editItemScreen .resetBtn,
+#editItemScreen .saveBtn {
+  background: none;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  width: 140px;
+  margin-left: 1rem;
+  padding: 1rem 0;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+#editItemScreen .resetBtn {
+  background-color: #f5cb42;
+}
+
+#editItemScreen .saveBtn {
+  background-color: #43de40;
+}
