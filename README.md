@@ -32,7 +32,6 @@
  
 # What's next for RU Connect?
 -We'd love to continue working on RU Connect to maybe one day deliver a robust marketplace service for realtime use with Rutgers students. Some features that we would like to implement in the future is a chat feature and a more refined searching method.
->>>>>>> e8c6f8f2befd1741bb773d87ebe1bed83f4d7d81
 
 # Authors and acknowledgment
-Jeffrey Yang, Jonathan Wang, Justin Chen, wahoo Trivedi
+Jeffrey Yang, Jonathan Wang, Justin Chen, Rahul Trivedi
